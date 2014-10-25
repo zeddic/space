@@ -46,7 +46,6 @@ function createCommands(stage, planets) {
   }
 
   function issueCommand(start, end) {
-
     var numShips = Math.floor(start.getScale() * 50);
 
     for (var i = 0; i < numShips; i++) {
@@ -58,9 +57,7 @@ function createCommands(stage, planets) {
   };
 
   function update() {
-
     if (startPlanet && mousePoint) {
-
       if (startPlanet.contains(mousePoint)) {
         return;
       }
