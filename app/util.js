@@ -5,10 +5,9 @@ space.util = {};
 function invoke(fnName) {
   return function(item) {
     item[fnName](item);
-//    fn.call(item);
+    // fn.call(item);
   }
 }
-
 
 function rand(min, max) { 
   return Math.random()*(max-min) + min; 
