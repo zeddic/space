@@ -1,4 +1,3 @@
-
 function createCommands(stage, planets) {
 
   var state = space.state;
