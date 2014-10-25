@@ -8,7 +8,6 @@ function createCommands(stage, planets) {
   var startPlanet = null;
   var mousePoint = null;
 
-
   stage.mousemove = function(data) {
     mousePoint = data.global.clone();
   }
