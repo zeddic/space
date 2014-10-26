@@ -44,7 +44,15 @@ function createCommands(stage, planets) {
   }
 
   function issueCommand(start, end) {
-    var numShips = Math.floor(start.getScale() * 50);
+
+    var numShips = Math.ceil(start.population * .75);
+    if (start.population - 1 <= 0) {
+      numShips--;
+    }
+
+    start.population -= numShips;
+
+    //var numShips = Math.floor(start.getScale() * 50);
 
     for (var i = 0; i < numShips; i++) {
       var ship = new Ship(start.x, start.y, start.tint);

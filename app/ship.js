@@ -99,11 +99,21 @@ Ship.prototype.collide = function(other) {
     if(index !== -1) {
       entities.splice(index, 1);
     }
+
+    if (other.tint == this.tint) {
+      other.population++;
+    } else {
+      other.population--;
+      if (other.population == 0) {
+        other.population = 1;
+        other.tint = this.tint;
+      }
+    }
   }
 };
 
 Planet = function(x, y) {
-  PIXI.Sprite.call(this, Planet.texture);
+  PIXI.Sprite.call(this, Planet.TEXTURE);
   this.position.x = x;
   this.position.y = y;
   this.anchor.x = .5;
@@ -111,7 +121,7 @@ Planet = function(x, y) {
   this.tint = Math.random();
   //this.tint = 0x0022FF;
   this.tint = space.colors.random();
-  this.radius = rand(6, 70);
+  this.radius = rand(25, 65);
 
   var scale = this.getScale();
   var size = scale * Planet.NATIVE_SIZE;
@@ -121,21 +131,48 @@ Planet = function(x, y) {
   this.mass = scale * Planet.NATIVE_MASS;
   this.velocity = new Vector(0, 0);
   this.interactive = true;
+
+  this.population = 10;
+
+  this.text = new PIXI.Text(this.population, Planet.TEXT_STYLE);
+  this.text.anchor.x = .5;
+  this.text.anchor.y = .5;
+  this.addChild(this.text, Planet.TEXT_STYLE);
+
+  this.popRate = scale * Planet.NATIVE_RATE;
+  this.popCounter = 0;
+  this.maxPopulation = scale * Planet.NATIVE_MAX_POPULATION;
 };
 
 Planet.prototype = Object.create(PIXI.Sprite.prototype);
 Planet.prototype.constructor = Planet;
 
-Planet.texture = PIXI.Texture.fromImage('textures/planet.png');
+Planet.TEXTURE = PIXI.Texture.fromImage('textures/planet.png');
 Planet.NATIVE_RADIUS = 32;
 Planet.NATIVE_SIZE = 64;
-Planet.NATIVE_MASS = 500;
+Planet.NATIVE_MASS = 9999;
+Planet.NATIVE_RATE = 1.5;
+Planet.NATIVE_MAX_POPULATION = 50;
+Planet.TEXT_STYLE = {
+  fill: 'white'
+};
+
+Planet.prototype.setText = function(newText) {
+  this.text.setText(newText);
+};
 
 Planet.prototype.getScale = function() {
   return this.radius / Planet.NATIVE_RADIUS;
 };
 
 Planet.prototype.update = function() {
+  this.popCounter += this.popRate;
+  if (this.popCounter > 100 && this.population < this.maxPopulation) {
+    this.popCounter = 0;
+    this.population++;
+  }
+
+  this.text.setText(this.population);
   //graphics.lineStyle(1, 0xFF0000);
   //graphics.drawCircle(this.position.x, this.position.y, this.radius);
 };
