@@ -24,7 +24,6 @@ space.util.within = function(point, entity) {
   return (dX * dX + dY * dY) < (radius * radius);
 };
 
-
 space.colors = function() {
   var RED = 0xF90101;
   var BLUE = 0x0266C8;
@@ -38,6 +37,7 @@ space.colors = function() {
       var color = colors[randInt(0, colors.length)];
       return color;
     },
+    colors: colors,
     RED: RED,
     BLUE: BLUE,
     WHITE: WHITE,
