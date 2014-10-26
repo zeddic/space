@@ -48,8 +48,12 @@ function start() {
   var ships = [];
 
   // Create Planets.
-  for (var i = 0; i < 20; i++) {
-    var planet = new Planet(rand(0, width), rand(0, height));
+  var buffer = 40;
+  for (var i = 0; i < 10; i++) {
+    var planet = new Planet(
+        rand(buffer, width - buffer),
+        rand(buffer, height - buffer));
+
     planets.push(planet);
     items.push(planet);
   }
