@@ -5,6 +5,8 @@ var game = {};
  */
 game.module = angular.module('game', []);
 
-game.module.controller('CardController', function() {
-  console.log('in controller');
+game.module.controller('CardController', function($element, $scope) {
+  $scope.dismiss = function() {
+    $element.hide();
+  };
 });

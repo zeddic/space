@@ -2,7 +2,6 @@
 <html>
   <head>
     <link href="css/main.css" rel="stylesheet"></style>
-
     <script src="lib/stats.min.js"></script>
     <script src="lib/three.min.js"></script>
     <script src="lib/pixi.js"></script>
@@ -21,12 +20,13 @@
   <body onload="start()" ng-app="game">
     <div class="game-content"></div>
     <section class="card" ng-controller="CardController">
-      <header>Space Game!</header>
+      <header>Space!!</header>
       <ul class="card-list">
         <li>Click and drag between two planets to send ships</li>
-        <li>Try to conquer all planets with a single color</li>
+        <li>Ships will randomly fly on their own</li>
+        <li>The only winning move is not to play</li>
       </ul>
-      <button type="button" class="btn">Start Game</button>
+      <button type="button" class="btn" ng-click="dismiss()">Ok! Get this dialog out of the way!</button>
     </section>
   </body>
 </html>
