@@ -48,15 +48,35 @@ function start() {
   var ships = [];
 
   // Create Planets.
-  var buffer = 40;
+  var edgeBuffer = 40;
+  var planetBuffer = 50;
   for (var i = 0; i < 10; i++) {
-    var planet = new Planet(
-        rand(buffer, width - buffer),
-        rand(buffer, height - buffer));
+    var planet = new Planet();
+    planet.position = randomPlanetPosition();
+
+    while(isCloseToExistingPlanet(planet)) {
+      planet.position = randomPlanetPosition();
+    }
 
     planets.push(planet);
     items.push(planet);
   }
+
+  function randomPlanetPosition() {
+    return new Vector(
+        rand(edgeBuffer, width - edgeBuffer),
+        rand(edgeBuffer, height - edgeBuffer));
+  }
+
+  function isCloseToExistingPlanet(planet) {
+    for (var i = 0, other; other = planets[i]; i++) {
+      var minDistance = planet.radius + other.radius;
+      if (space.util.withinRange(planet.position, other.position, minDistance)) {
+        return true;
+      }
+    }
+    return false;
+  };
 
   // Create Ships.
   for (var i = 0; i < 0; i++) {

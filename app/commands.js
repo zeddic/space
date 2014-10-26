@@ -44,6 +44,10 @@ function createCommands(stage, planets) {
   }
 
   function issueCommand(start, end) {
+    // Ignore commands to the same planet.
+    if (start == end) {
+      return;
+    }
 
     var numShips = Math.ceil(start.population * .75);
     if (start.population - 1 <= 0) {
@@ -62,7 +66,19 @@ function createCommands(stage, planets) {
     }
   };
 
+  function randomPlanet() {
+    return planets[randInt(0, planets.length)];
+  }
+
   function update() {
+
+    // Randomly issue commands for demo.
+    var automattedCommand = (randInt(0, 100) === 1);
+    if (automattedCommand) {
+      issueCommand(randomPlanet(), randomPlanet());
+    }
+
+    // Draw a line from the start planet to the users mouse.
     if (startPlanet && mousePoint) {
       if (startPlanet.contains(mousePoint)) {
         return;
