@@ -17,6 +17,7 @@ var BaseEntityProto = (function() {
     this.width = data.width || this.width;
     this.height = data.height || this.height;
     this.type = data.type || this.type;
+    this.side = this.tint;
   });
 
   proto.setup = function(data) {
@@ -60,6 +61,16 @@ var BaseEntityProto = (function() {
         opt_offset);
   };
 
+  proto.radiusPointByRad = function(rad, opt_offset) {
+    var vector = this.directionVector(rad);
+    return this.radiusPointByVector(vector, opt_offset);
+  };
+
+  proto.directionVector = function(opt_rad, opt_length) {
+    var rad = opt_rad || 0;
+    return Vector.fromRad(rad + this.rotation, opt_length);
+  };
+
   proto.containsPoint = function(point) {
     return space.util.within(point, this);
   };
@@ -67,6 +78,17 @@ var BaseEntityProto = (function() {
   proto.update = function() {
     // to override.
   };
+
+  proto.offscreen = function() {
+    var state = space.state;
+    var sWidth = state.width;
+    var sHeight = state.height;
+
+    return this.x + this.radius < 0 ||
+        this.x - this.radius > sWidth ||
+        this.y + this.radius < 0 ||
+        this.y - this.radius > sHeight;
+  }
 
   return proto;
 })();
@@ -94,7 +116,7 @@ var mixinPhysics = function(proto) {
 
 
 /**
- * Creates a ship game object.
+ * SHIP
  */
 objects.createShip = (function() {
   var proto = Object.create(BaseEntityProto);
@@ -118,6 +140,8 @@ objects.createShip = (function() {
     this.anchor.x = .4;
     this.anchor.y = .5;
     this.speed = 3;
+    this.counter = 0;
+
     return this;
   };
 
@@ -168,7 +192,22 @@ objects.createShip = (function() {
   /** Update object. */
   proto.update = function() {
     this.aim();
-    this.updatePosition();
+    //this.updatePosition();
+
+    this.counter += .5;
+    if (this.counter > 8) {
+      this.counter = 0;
+      this.fireBullet();
+    }
+  };
+
+  proto.fireBullet = function() {
+    var entities = space.state.entities;
+    var bullet = entities.createBullet();
+
+    bullet.side = this.tint;
+    bullet.position = this.radiusPointByRad(0, 10);
+    bullet.velocity = this.directionVector(0, 5);
   };
 
   return function(x, y, tint) {
@@ -178,7 +217,7 @@ objects.createShip = (function() {
 
 
 /**
- * Creates a ship game object.
+ * PLANET
  */
 objects.createPlanet = (function() {
 
@@ -241,5 +280,58 @@ objects.createPlanet = (function() {
 
   return function(x, y, tint) {
     return Object.create(proto).init(x, y, tint);
+  };
+})();
+
+
+/**
+ * BULLET
+ */
+objects.createBullet = (function() {
+
+  // Base Proto.
+  var proto = Object.create(BaseEntityProto);
+  mixinPhysics(proto);
+  proto.type = 'bullet';
+  proto.texture = PIXI.Texture.fromImage('textures/bullet.png');
+
+  /** Initialize */
+  proto.init = function(x, y) {
+    this.setup({
+      x: x,
+      y: y,
+      tint: space.colors.ORANGE,
+      width: 2,
+      height: 2,
+      radius: 2
+    });
+
+    this.state = space.state;
+    this.entities = space.state.entities;
+    this.anchor.x = .5;
+    this.anchor.y = .5;
+    this.side = space.colors.ORANGE;
+    return this;
+  };
+
+  /** Update object. */
+  proto.update = function() {
+    this.updatePosition();
+
+    if (this.offscreen()) {
+      this.entities.remove(this);
+    }
+  };
+
+  proto.collide = function(other) {
+    if (other.type == 'bullet') {
+      return;
+    }
+
+    this.entities.remove(this);
+  };
+
+  return function(x, y) {
+    return Object.create(proto).init(x, y);
   };
 })();

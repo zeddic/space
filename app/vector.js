@@ -129,5 +129,10 @@ Vector.prototype.rotate = function(theta) {
   return this;
 };
 
+Vector.fromRad = function(rad, opt_length) {
+  var l = opt_length || 1;
+  return new Vector(l * Math.cos(rad), l * Math.sin(rad));
+}
+
 // constructor
 Vector.prototype.constructor = Vector;

@@ -19,7 +19,16 @@ space.collisions = function() {
   }
 
   function collides(o1, o2) {
-    return o1 !== o2  && circleCollides(o1, o2);
+
+    if (o1 === o2) {
+      return false;
+    }
+
+    if (o1.type == 'bullet' && o2.type == 'bullet') {
+      return false;
+    }
+
+    return circleCollides(o1, o2);
   }
 
   function circleCollides(o1, o2) {

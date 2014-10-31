@@ -19,6 +19,8 @@ function createCommands(state, stage, entities) {
 
   stage.mousedown = function(data) {
     down = true;
+          var ship = entities.createShip(mousePoint.x, mousePoint.y, space.colors.random());
+      ship.target = globalMousePoint;
   }
 
   stage.mouseup = function(data) {
@@ -46,7 +48,7 @@ function createCommands(state, stage, entities) {
 
   function onPlanetEnd(planet) {
     if (startPlanet) {
-      issueCommand(startPlanet, planet);
+      //issueCommand(startPlanet, planet);
     }
   }
 
@@ -75,8 +77,8 @@ function createCommands(state, stage, entities) {
 
   function update() {
     if (down) {
-      //var ship = entities.createOtherShip(mousePoint.x, mousePoint.y, space.colors.random());
-      //ship.target = globalMousePoint;
+      // var ship = entities.createShip(mousePoint.x, mousePoint.y, space.colors.random());
+      // ship.target = globalMousePoint;
     }
 
     // Randomly issue commands for demo.
@@ -86,17 +88,17 @@ function createCommands(state, stage, entities) {
     // }
 
     // Draw a line from the start planet to the users mouse.
-    if (startPlanet && mousePoint) {
-      if (startPlanet.containsPoint(mousePoint)) {
-        return;
-      }
+    // if (startPlanet && mousePoint) {
+    //   if (startPlanet.containsPoint(mousePoint)) {
+    //     return;
+    //   }
 
-      var startPoint = startPlanet.radiusPointByTarget(mousePoint, 5);
+    //   var startPoint = startPlanet.radiusPointByTarget(mousePoint, 5);
 
-      graphics.lineStyle(5, 0xFFFFFF);
-      graphics.moveTo(startPoint.x, startPoint.y);
-      graphics.lineTo(mousePoint.x, mousePoint.y);
-    }
+    //   graphics.lineStyle(5, 0xFFFFFF);
+    //   graphics.moveTo(startPoint.x, startPoint.y);
+    //   graphics.lineTo(mousePoint.x, mousePoint.y);
+    // }
   }
 
   return {

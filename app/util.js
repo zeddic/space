@@ -108,6 +108,10 @@ function createEntities(stage) {
     return add(objects.createPlanet());
   }
 
+  function createBullet() {
+    return add(objects.createBullet());
+  }
+
   function updateAll() {
     for (var key in all) {
       var items = all[key];
@@ -128,6 +132,7 @@ function createEntities(stage) {
     remove: remove,
     createShip: createShip,
     createPlanet: createPlanet,
+    createBullet: createBullet,
     updateAll: updateAll,
     types: types,
     list: list,
