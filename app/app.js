@@ -9,4 +9,8 @@ game.module.controller('CardController', function($element, $scope) {
   $scope.dismiss = function() {
     $element.hide();
   };
+
+  $scope.randomize = function() {
+    space.game.randomize();
+  };
 });

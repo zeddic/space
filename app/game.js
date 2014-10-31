@@ -1,5 +1,3 @@
-var renderer, camera, stage;
-
 PIXI.Point = Vector;
 
 function createState() {
@@ -25,100 +23,125 @@ function createState() {
 }
 
 space.state = {};
+space.game = {};
 
-function start() {
-
-  // Stats
-  var stats = new Stats();
-  stats.domElement.style.position = 'absolute';
-  stats.domElement.style.bottom = '0px';
-  stats.domElement.style.right = '0px';
-  $(document.body).append(stats.domElement);
-
-  // Canvas
+function createGame() {
+  var stats = setupStats();
   var state = space.state = createState();
-  var width = state.width;
-  var height = state.height;
-  var renderer = state.renderer = new PIXI.WebGLRenderer(width, height);
-  state.el.append(state.renderer.view);
+  var renderer, stage, graphics;
 
-  var stage = state.stage = new PIXI.Stage();
-  var items = state.entities;
-  var planets = [];
-  var ships = [];
+  setupCanvas();
 
-  // Create Planets.
-  var edgeBuffer = 40;
-  var planetBuffer = 50;
-  for (var i = 0; i < 10; i++) {
-    var planet = new Planet();
-    planet.position = randomPlanetPosition();
+  var entities = state.entities = createEntities(stage);
+  var planets = setupPlanets();
+  var commands = createCommands(state, stage, entities);
 
-    while(isCloseToExistingPlanet(planet)) {
-      planet.position = randomPlanetPosition();
-    }
-
-    planets.push(planet);
-    items.push(planet);
+  /**
+   * Sets up WebGL stats plugin for FPS.
+   */ 
+  function setupStats() {
+    var stats = new Stats();
+    stats.domElement.style.position = 'absolute';
+    stats.domElement.style.bottom = '0px';
+    stats.domElement.style.right = '0px';
+    $(document.body).append(stats.domElement);
+    return stats;
   }
 
-  function randomPlanetPosition() {
-    return new Vector(
-        rand(edgeBuffer, width - edgeBuffer),
-        rand(edgeBuffer, height - edgeBuffer));
+  /**
+   * Sets up the the webgl canvas and stage.
+   */
+  function setupCanvas() {
+    renderer = state.renderer = new PIXI.WebGLRenderer(state.width, state.height);
+    state.el.append(state.renderer.view);
+    stage = state.stage = new PIXI.Stage();
+    graphics = state.graphics = new PIXI.Graphics();
+    stage.addChild(graphics);
   }
 
-  function isCloseToExistingPlanet(planet) {
-    for (var i = 0, other; other = planets[i]; i++) {
-      var minDistance = planet.radius + other.radius;
-      if (space.util.withinRange(planet.position, other.position, minDistance)) {
-        return true;
-      }
-    }
-    return false;
+  /**
+   * Sets up the starting planets.
+   */
+  function setupPlanets() {
+    var planets = [];
+    var width = state.width;
+    var height = state.height;
+    var edgeBuffer = 40;
+    var planetBuffer = 50;
+    var numPlanets = 10;
+
+    var randomizePoint = function(point) {
+      point.x = rand(edgeBuffer, width - edgeBuffer);
+      point.y = rand(edgeBuffer, height - edgeBuffer);
+    };
+
+    var isCloseToOtherPlanet = function(planet) {
+      return entities.planets().some(function(other) {
+        var minDistance = planet.radius + other.radius;
+        return space.util.withinRange(planet.position, other.position, minDistance)
+      });
+    };
+
+    for (var i = 0; i < 10; i++) {
+
+      var planet = new Planet();
+      do {
+        randomizePoint(planet.position);
+      } while (isCloseToOtherPlanet(planet));
+
+      entities.add(planet);
+    };
+
+    return planets;
   };
 
-  // Create Ships.
-  for (var i = 0; i < 0; i++) {
-    var ship = new Ship(rand(0, width), rand(0, height));
-    items.push(ship);
-    ships.push(ship);
+  /**
+   * Creates a new world of planets.
+   */
+  function reset() {
+    stage.removeChildren();
+    entities = state.entities = createEntities(stage);
+    planets = setupPlanets();
+    commands = createCommands(state, stage, entities);
   }
 
-  // Create Graphics.
-  state.graphics = new PIXI.Graphics();
+  /**
+   * Primary game-loop called ~60fps.
+   */
+  function gameLoop() {
 
-  // Move them around when you click.
-  /*stage.click = function() {
-    items.forEach(function(item) {
-      item.position.set(rand(0, width), rand(0, height));
-    });
-  }; */
-
-  // Have ships follow your mouse.
-  stage.mousemove = function(data) {
-    ships.forEach(function(ship) {
-      ship.target = data.global;
-    });
-  };
-
-  var commands = createCommands(stage, planets);
-
-  items.forEach(stage.addChild.bind(stage));
-  stage.addChild(state.graphics);
-
-  function animate() {
+    // Update entities.
     state.graphics.clear();
+    //state.entities.forEach(invoke('update'));
 
-    items.forEach(invoke('update'));
+    entities.updateAll();
     commands.update();
-    space.collisions.check(items);
+    space.collisions.check(entities);
 
     renderer.render(stage);
 
-    requestAnimationFrame(animate);
+    requestAnimationFrame(gameLoop);
     stats.update();
   }
 
-  requestAnimationFrame(animate);
+  /**
+   * Destroys the game.
+   */
+  function dispose() {
+    $(stats.domElement).remove();
+    // TODO: dispose PIXI resources
+  }
+
+  return {
+    dispose: dispose,
+    start: function() {
+      requestAnimationFrame(gameLoop);
+    },
+    randomize: reset
+  };
+};
+
+function start() {
+  space.game = createGame();
+  space.game.start();
 }

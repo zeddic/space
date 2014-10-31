@@ -4,8 +4,9 @@ var space = space || {};
 space.collisions = function() {
 
   function check(entities) {
-    for (var i = 0, entity; entity = entities[i]; i++) {
-      checkEntity(entities, entity);
+    var list = entities.list;
+    for (var i = 0, entity; entity = list[i]; i++) {
+      checkEntity(list, entity);
     }
   }
 

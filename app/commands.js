@@ -1,11 +1,14 @@
-function createCommands(stage, planets) {
+function createCommands(state, stage, entities) {
 
-  var state = space.state;
   var stage = state.stage;
   var graphics = state.graphics;
-  var entities = state.entities;
   var startPlanet = null;
   var mousePoint = null;
+  var planets = entities.planets();
+
+  planets.forEach(function(planet) {
+    planet.mousedown = onPlanetStart;
+  });
 
   stage.mousemove = function(data) {
     mousePoint = data.global.clone();
@@ -18,10 +21,6 @@ function createCommands(stage, planets) {
     }
     startPlanet = null;
   };
-
-  planets.forEach(function(planet) {
-    planet.mousedown = onPlanetStart;
-  });
 
   function findTargetPlanet(point) {
     for (var i = 0, planet; planet = planets[i]; i++) {
@@ -59,10 +58,8 @@ function createCommands(stage, planets) {
     //var numShips = Math.floor(start.getScale() * 50);
 
     for (var i = 0; i < numShips; i++) {
-      var ship = new Ship(start.x, start.y, start.tint);
+      var ship = entities.createShip(start.x, start.y, start.tint);
       ship.target = end.position;
-      entities.push(ship);
-      stage.addChild(ship);
     }
   };
 

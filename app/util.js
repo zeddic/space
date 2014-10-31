@@ -53,3 +53,77 @@ space.colors = function() {
     ORANGE: ORANGE
   };
 }();
+
+
+function createEntities(stage) {
+  var all = {};
+  var list = [];
+
+  function fetch(type) {
+    return all[type] || [];
+  }
+
+  function add(item, opt_type) {
+    var type = getType(item, opt_type);
+    if (!all[type]) {
+      all[type] = [];
+    }
+    all[type].push(item);
+    list.push(item);
+    stage.addChild(item);
+    return item;
+  }
+
+  function remove(item, opt_type) {
+    var type = getType(item, opt_type);
+    var items = fetch(type);
+    var index = items.indexOf(item);
+    if (index !== -1) {
+      items.splice(index, 1);
+    }
+
+    index = list.indexOf(item);
+    if (index !== -1) {
+      list.splice(index, 1);
+      stage.removeChild(item);
+    }
+  }
+
+  function getType(item, opt_type) {
+    return opt_type || item.type || 'other';
+  }
+
+  function createShip(x, y, tint) {
+    return add(new Ship(x, y, tint));
+  }
+
+  function createPlanet() {
+    return add(new Planet());
+  }
+
+  function updateAll() {
+    for (var key in all) {
+      var items = all[key];
+      for (var i = 0, item; item = items[i]; i++) {
+        item.update();
+      }
+    }
+  }
+
+  function types() {
+    return Object.keys(all);
+  }
+
+  return {
+    ships: fetch.bind(this, 'ship'),
+    planets: fetch.bind(this, 'planet'),
+    add: add,
+    remove: remove,
+    createShip: createShip,
+    createPlanet: createPlanet,
+    updateAll: updateAll,
+    types: types,
+    list: list,
+    fetch: fetch
+  };
+};
