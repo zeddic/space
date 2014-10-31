@@ -17,6 +17,7 @@ Ship = function(x, y, opt_color) {
 
   this.waitDistance = 20;
   this.mass = 5;
+  this.type = 'ship';
 };
 
 Ship.prototype = Object.create(PIXI.Sprite.prototype);
@@ -92,19 +93,13 @@ Ship.prototype.collide = function(other) {
 
   if (other instanceof Planet && other.position == this.target) {
     var state = space.state;
-    var entities = state.entities;
-    state.stage.removeChild(this);
-
-    var index = entities.indexOf(this);
-    if(index !== -1) {
-      entities.splice(index, 1);
-    }
+    state.entities.remove(this);
 
     if (other.tint == this.tint) {
       other.population++;
     } else {
       other.population--;
-      if (other.population == 0) {
+      if (other.population <= 0) {
         other.population = 1;
         other.tint = this.tint;
       }
@@ -122,6 +117,7 @@ Planet = function(x, y) {
   //this.tint = 0x0022FF;
   this.tint = space.colors.random();
   this.radius = rand(25, 65);
+  this.type = 'planet';
 
   var scale = this.getScale();
   var size = scale * Planet.NATIVE_SIZE;

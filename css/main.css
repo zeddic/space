@@ -52,13 +52,15 @@ canvas {
   color: #fff;
   cursor: pointer;
   font-size: 15px;
+  margin: 2px 5px 2px 0;
   outline: none;
   padding: 5px 15px;
+  vertical-align: middle;
 }
 
 .btn:active {
   border-bottom-width: 0px;
-  margin-top: 4px;
+  margin-top: 6px;
   position: relative;
 }
 
