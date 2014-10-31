@@ -5,6 +5,8 @@ function createCommands(state, stage, entities) {
   var startPlanet = null;
   var mousePoint = null;
   var planets = entities.planets();
+  var down = false;
+  var globalMousePoint;
 
   planets.forEach(function(planet) {
     planet.mousedown = onPlanetStart;
@@ -12,9 +14,15 @@ function createCommands(state, stage, entities) {
 
   stage.mousemove = function(data) {
     mousePoint = data.global.clone();
+    globalMousePoint = data.global;
+  }
+
+  stage.mousedown = function(data) {
+    down = true;
   }
 
   stage.mouseup = function(data) {
+    down = false;
     var planet = findTargetPlanet(data.global);
     if (planet) {
       onPlanetEnd(planet);
@@ -24,7 +32,7 @@ function createCommands(state, stage, entities) {
 
   function findTargetPlanet(point) {
     for (var i = 0, planet; planet = planets[i]; i++) {
-      if (planet.contains(point)) {
+      if (planet.containsPoint(point)) {
         return planet;
       }
     }
@@ -55,8 +63,6 @@ function createCommands(state, stage, entities) {
 
     start.population -= numShips;
 
-    //var numShips = Math.floor(start.getScale() * 50);
-
     for (var i = 0; i < numShips; i++) {
       var ship = entities.createShip(start.x, start.y, start.tint);
       ship.target = end.position;
@@ -68,20 +74,24 @@ function createCommands(state, stage, entities) {
   }
 
   function update() {
+    if (down) {
+      //var ship = entities.createOtherShip(mousePoint.x, mousePoint.y, space.colors.random());
+      //ship.target = globalMousePoint;
+    }
 
     // Randomly issue commands for demo.
-    var automattedCommand = (randInt(0, 100) === 1);
-    if (automattedCommand) {
-      issueCommand(randomPlanet(), randomPlanet());
-    }
+    // var automattedCommand = (randInt(0, 100) === 1);
+    // if (automattedCommand) {
+    //   issueCommand(randomPlanet(), randomPlanet());
+    // }
 
     // Draw a line from the start planet to the users mouse.
     if (startPlanet && mousePoint) {
-      if (startPlanet.contains(mousePoint)) {
+      if (startPlanet.containsPoint(mousePoint)) {
         return;
       }
 
-      var startPoint = startPlanet.getEdgePoint(mousePoint, 5);
+      var startPoint = startPlanet.radiusPointByTarget(mousePoint, 5);
 
       graphics.lineStyle(5, 0xFFFFFF);
       graphics.moveTo(startPoint.x, startPoint.y);

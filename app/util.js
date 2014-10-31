@@ -70,7 +70,14 @@ function createEntities(stage) {
     }
     all[type].push(item);
     list.push(item);
-    stage.addChild(item);
+
+    if (item instanceof PIXI.Sprite) {
+
+      stage.addChild(item);
+    } else {
+      stage.addChild(item.sprite);
+    }
+
     return item;
   }
 
@@ -94,11 +101,11 @@ function createEntities(stage) {
   }
 
   function createShip(x, y, tint) {
-    return add(new Ship(x, y, tint));
+    return add(objects.createShip(x, y, tint));
   }
 
   function createPlanet() {
-    return add(new Planet());
+    return add(objects.createPlanet());
   }
 
   function updateAll() {

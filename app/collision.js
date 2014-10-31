@@ -47,6 +47,12 @@ space.collisions = function() {
     // Determine how far away the items are.
     var dX = o1.position.x - o2.position.x;
     var dY = o1.position.y - o2.position.y;
+
+    if (dX == 0 && dY == 0) {
+      dX = rand(-.5, .5);
+      dY = rand(-.5, .5);
+    }
+
     delta.set(dX, dY);
 
     // Determine how far away they SHOULD be to no longer collide.
@@ -64,18 +70,17 @@ space.collisions = function() {
     var o1MassShare = o1InverseMass / totalInverseMass;
     var o2MassShare = o2InverseMass / totalInverseMass;
 
-    var o1Speed = o1.velocity.dot(delta);
-    var o2Speed = o2.velocity.dot(delta);
-    var totalSpeed = o1Speed + o2Speed;
-    var o1SpeedShare = o1Speed / totalSpeed;
-    var o2SpeedShare = o2Speed / totalSpeed;
-
+    // var o1Speed = o1.velocity.dot(delta);
+    // var o2Speed = o2.velocity.dot(delta);
+    // var totalSpeed = o1Speed + o2Speed;
+    // var o1SpeedShare = o1Speed / totalSpeed;
+    // var o2SpeedShare = o2Speed / totalSpeed;
 
     //var o1Share = (o1Speed * o1InverseMass) / (o1Speed * o1InverseMass + o2Speed * o2InverseMass);
     //var o2Share = (o2Speed * o2InverseMass) / (o1Speed * o1InverseMass + o2Speed * o2InverseMass);
 
-    var o1Share = o1MassShare * o1SpeedShare;
-    var o2Share = o2MassShare * o2SpeedShare;
+    // var o1Share = o1MassShare * o1SpeedShare;
+    // var o2Share = o2MassShare * o2SpeedShare;
 
     var object1Displacement = displacement * o1MassShare;
     var object2Displacement = displacement * o2MassShare;

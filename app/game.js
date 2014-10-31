@@ -83,8 +83,7 @@ function createGame() {
     };
 
     for (var i = 0; i < 10; i++) {
-
-      var planet = new Planet();
+      var planet = objects.createPlanet();
       do {
         randomizePoint(planet.position);
       } while (isCloseToOtherPlanet(planet));
