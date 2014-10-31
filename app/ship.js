@@ -37,12 +37,6 @@ Ship.prototype.position = function(x, y) {
 Ship.prototype.update = function() {
   this.updateVelocity();
   this.position.add(this.velocity);
-
-  //graphics.lineStyle(1, 0xFFFFFF);
-  //graphics.drawCircle(this.position.x, this.position.y, this.radius);
-  //graphics.lineStyle(1, 0xFFFFFF);
-  //graphics.drawRect(this.sprite.position.x, this.sprite.position.y, this.sprite.width, this.sprite.height);
-  //graphics.drawRect(this.left(), this.top(), this.sprite.width, this.sprite.height);
 };
 
 
@@ -114,7 +108,6 @@ Planet = function(x, y) {
   this.anchor.x = .5;
   this.anchor.y = .5;
   this.tint = Math.random();
-  //this.tint = 0x0022FF;
   this.tint = space.colors.random();
   this.radius = rand(25, 65);
   this.type = 'planet';
@@ -169,8 +162,6 @@ Planet.prototype.update = function() {
   }
 
   this.text.setText(this.population);
-  //graphics.lineStyle(1, 0xFF0000);
-  //graphics.drawCircle(this.position.x, this.position.y, this.radius);
 };
 
 /**
