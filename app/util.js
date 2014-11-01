@@ -17,6 +17,17 @@ function randInt(min, max) {
   return Math.floor(Math.random()*(max-min) + min); 
 }
 
+Array.prototype.remove = function(item) {
+  var index = this.indexOf(item);
+  if (index !== -1) {
+    this.splice(index, 1);
+  }
+};
+
+Array.prototype.contains = function(item) {
+  return this.indexOf(item) !== -1;
+};
+
 space.util.withinRange = function(point1, point2, range) {
   var dX = point1.x - point2.x;
   var dY = point1.y - point2.y;
@@ -70,13 +81,8 @@ function createEntities(stage) {
     }
     all[type].push(item);
     list.push(item);
-
-    if (item instanceof PIXI.Sprite) {
-
-      stage.addChild(item);
-    } else {
-      stage.addChild(item.sprite);
-    }
+    stage.addChild(item);
+    space.collisions.register(item);
 
     return item;
   }
@@ -94,6 +100,8 @@ function createEntities(stage) {
       list.splice(index, 1);
       stage.removeChild(item);
     }
+
+    space.collisions.unregister(item);
   }
 
   function getType(item, opt_type) {

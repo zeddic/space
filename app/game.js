@@ -34,6 +34,7 @@ function createGame() {
 
   var entities = state.entities = createEntities(stage);
   var planets = setupPlanets();
+  setupShips();
   var commands = createCommands(state, stage, entities);
 
   /**
@@ -82,7 +83,7 @@ function createGame() {
       });
     };
 
-    for (var i = 0; i < 10; i++) {
+    for (var i = 0; i < 0; i++) {
       var planet = objects.createPlanet();
       do {
         randomizePoint(planet.position);
@@ -93,6 +94,27 @@ function createGame() {
 
     return planets;
   };
+
+  function setupShips() {
+    var width = state.width;
+    var height = state.height;
+    var edgeBuffer = 40;
+    var planetBuffer = 50;
+    var numPlanets = 10;
+
+    var randomizePoint = function(point) {
+      point.x = rand(edgeBuffer, width - edgeBuffer);
+      point.y = rand(edgeBuffer, height - edgeBuffer);
+    };
+
+    var point = new Vector();
+    for (var i = 0; i < 0; i++) {
+      var ship = entities.createShip();
+      randomizePoint(point);
+      space.collisions.moveTo(ship, point);
+    };
+
+  }
 
   /**
    * Creates a new world of planets.

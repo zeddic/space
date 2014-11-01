@@ -3,14 +3,39 @@ var space = space || {};
 
 space.collisions = function() {
 
+  var hash = new SpatialHash();
+
+  function register(obj) {
+    hash.put(obj);
+  };
+
+  function unregister(obj) {
+    hash.remove(obj);
+  };
+
+  function move(obj, vector) {
+    hash.remove(obj);
+    obj.position.add(vector);
+    hash.put(obj);
+  };
+
+  function moveTo(obj, vector) {
+    hash.remove(obj);
+    obj.position.x = point.x;
+    obj.position.y = point.y;
+    hash.put(obj);
+  };
+
   function check(entities) {
     var list = entities.list;
     for (var i = 0, entity; entity = list[i]; i++) {
-      checkEntity(list, entity);
+      checkEntity(entity);
     }
   }
 
-  function checkEntity(entities, entity) {
+  function checkEntity(entity) {
+    var entities = hash.get(entity);
+
     for (var i = 0, other; other = entities[i]; i++) {
       if (collides(entity, other)) {
         seperate(entity, other);
@@ -19,7 +44,6 @@ space.collisions = function() {
   }
 
   function collides(o1, o2) {
-
     if (o1 === o2) {
       return false;
     }
@@ -50,6 +74,7 @@ space.collisions = function() {
   var delta = new Vector();
   var offset1 = new Vector();
   var offset2 = new Vector();
+  var DISPLACEMENT_BUFFER = .5;
 
   function seperate(o1, o2) {
 
@@ -65,7 +90,7 @@ space.collisions = function() {
     delta.set(dX, dY);
 
     // Determine how far away they SHOULD be to no longer collide.
-    var minDistance = o1.radius + o2.radius;
+    var minDistance = o1.radius + o2.radius + DISPLACEMENT_BUFFER;
     var displacement = minDistance - delta.length();
 
     // Split this displacement between the two items.
@@ -96,21 +121,25 @@ space.collisions = function() {
 
     offset1.set(delta.x, delta.y)
         .normalize()
-        .multiplyScalar(object1Displacement)
-        .addTo(o1.position);
+        .multiplyScalar(object1Displacement);
 
     offset2.set(delta.x, delta.y)
         .invert()
         .normalize()
-        .multiplyScalar(object2Displacement)
-        .addTo(o2.position);
+        .multiplyScalar(object2Displacement);
+
+    move(o1, offset1);
+    move(o2, offset2);
 
     o1.collide && o1.collide(o2);
     o2.collide && o2.collide(o1);
   }
 
   return {
+    register: register,
+    unregister: unregister,
+    move: move,
+    moveTo: move,
     check: check
   };
-
 }();

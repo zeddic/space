@@ -79,7 +79,7 @@ var BaseEntityProto = (function() {
     // to override.
   };
 
-  proto.offscreen = function() {
+  proto.isOffscreen = function() {
     var state = space.state;
     var sWidth = state.width;
     var sHeight = state.height;
@@ -89,6 +89,14 @@ var BaseEntityProto = (function() {
         this.y + this.radius < 0 ||
         this.y - this.radius > sHeight;
   }
+
+  proto.moveBy = function(vector) {
+    space.collisions.move(this, vector);
+  };
+
+  proto.moveTo = function(point) {
+    space.collisions.moveTo(this, point);
+  };
 
   return proto;
 })();
@@ -104,7 +112,9 @@ var mixinPhysics = function(proto) {
   });
 
   proto.updatePosition = function() {
-    this.position.add(this.velocity);
+    //this.position.add(this.velocity);
+    this.moveBy(this.velocity);
+    //space.collisions.move(this, this.velocity);
   };
 
   proto.collide = function(other) {};
@@ -206,8 +216,8 @@ objects.createShip = (function() {
     var bullet = entities.createBullet();
 
     bullet.side = this.tint;
-    bullet.position = this.radiusPointByRad(0, 10);
     bullet.velocity = this.directionVector(0, 5);
+    bullet.moveTo(this.radiusPointByRad(0, 10));
   };
 
   return function(x, y, tint) {
@@ -318,7 +328,7 @@ objects.createBullet = (function() {
   proto.update = function() {
     this.updatePosition();
 
-    if (this.offscreen()) {
+    if (this.isOffscreen()) {
       this.entities.remove(this);
     }
   };

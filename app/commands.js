@@ -77,8 +77,8 @@ function createCommands(state, stage, entities) {
 
   function update() {
     if (down) {
-      // var ship = entities.createShip(mousePoint.x, mousePoint.y, space.colors.random());
-      // ship.target = globalMousePoint;
+      var ship = entities.createShip(mousePoint.x, mousePoint.y, space.colors.random());
+      ship.target = globalMousePoint;
     }
 
     // Randomly issue commands for demo.
