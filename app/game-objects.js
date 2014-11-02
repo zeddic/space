@@ -149,14 +149,20 @@ objects.createShip = (function() {
     this.target = null;
     this.anchor.x = .4;
     this.anchor.y = .5;
-    this.speed = 3;
+    this.speed = 1;
     this.counter = 0;
+
+    this.counter2 = 0;
 
     return this;
   };
 
   /** Update velocity to point to the current target. */
   proto.aim = function() {
+    this.rotation += .025;
+    this.velocity.fromRad(this.rotation, this.speed);
+    return;
+
     if(!this.target) {
       return;
     }
@@ -201,13 +207,40 @@ objects.createShip = (function() {
 
   /** Update object. */
   proto.update = function() {
+    //this.findTarget();
     this.aim();
-    //this.updatePosition();
+    this.updatePosition();
 
-    this.counter += .5;
-    if (this.counter > 8) {
+    this.counter += 1;
+    if (this.counter > 20) {
       this.counter = 0;
       this.fireBullet();
+    }
+  };
+
+  proto.findTarget = function() {
+    this.counter2++;
+    if (this.counter2 > 60 * 5) {
+      this.counter2 = 0;
+      var others = space.collisions.findWithinRadius(this.position, 500);
+
+
+      var self = this;
+
+      function isShip(obj) {
+        return obj.type == 'ship' && obj !== self;
+      }
+
+      function compareDistance(a, b) {
+        var dA = self.position.distanceToSq(a.position);
+        var dB = self.position.distanceToSq(b.position);
+        return dA - dB;
+      }
+
+      others = others.filter(isShip).sort(compareDistance);
+
+
+      this.target = others[0];
     }
   };
 
@@ -216,8 +249,8 @@ objects.createShip = (function() {
     var bullet = entities.createBullet();
 
     bullet.side = this.tint;
-    bullet.velocity = this.directionVector(0, 5);
-    bullet.moveTo(this.radiusPointByRad(0, 10));
+    bullet.velocity = this.directionVector(0, 2);
+    bullet.moveTo(this.radiusPointByRad(0, 2));
   };
 
   return function(x, y, tint) {

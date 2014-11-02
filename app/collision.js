@@ -26,6 +26,10 @@ space.collisions = function() {
     hash.put(obj);
   };
 
+  function findWithinRadius(point, radius) {
+    return hash.getInRadius(point, radius);
+  };
+
   function check(entities) {
     var list = entities.list;
     for (var i = 0, entity; entity = list[i]; i++) {
@@ -140,6 +144,7 @@ space.collisions = function() {
     unregister: unregister,
     move: move,
     moveTo: move,
-    check: check
+    check: check,
+    findWithinRadius: findWithinRadius
   };
 }();

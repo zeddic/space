@@ -28,19 +28,14 @@ Array.prototype.contains = function(item) {
   return this.indexOf(item) !== -1;
 };
 
-space.util.withinRange = function(point1, point2, range) {
+space.util.withinDistance = function(point1, point2, range) {
   var dX = point1.x - point2.x;
   var dY = point1.y - point2.y;
   return (dX * dX + dY * dY) < (range * range);
 };
 
 space.util.within = function(point, entity) {
-  return space.util.withinRange(point, entity.position, entity.radius);
-
-  var dX = point.x - entity.x;
-  var dY = point.y - entity.y;
-  var radius = entity.radius;
-  return (dX * dX + dY * dY) < (radius * radius);
+  return space.util.withinDistance(point, entity.position, entity.radius);
 };
 
 space.colors = function() {

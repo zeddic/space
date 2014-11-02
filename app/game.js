@@ -110,6 +110,7 @@ function createGame() {
     var point = new Vector();
     for (var i = 0; i < 0; i++) {
       var ship = entities.createShip();
+      ship.tint = space.colors.random();
       randomizePoint(point);
       space.collisions.moveTo(ship, point);
     };
