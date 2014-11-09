@@ -130,7 +130,7 @@ Vector.prototype.rotate = function(theta) {
 };
 
 Vector.prototype.fromRad = function(rad, opt_length) {
-  var l = opt_length || 1;
+  var l = (opt_length == undefined) ? 1 : opt_length;
   this.x = l * Math.cos(rad);
   this.y = l * Math.sin(rad);
   return this;

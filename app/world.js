@@ -1,11 +1,12 @@
 
 /**
+ * @param {PIXI.DisplayObjectContainer} root
  * @constructor
  */
-function World(stage) {
+function World(root) {
 
   /** All game objects in the world. */
-  this.entities = new Entities(stage);
+  this.entities = new Entities(root);
 
   /** Reolves collisions among game objects. */
   this.collisions = new CollisionSystem();

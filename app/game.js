@@ -29,11 +29,14 @@ function createGame() {
   var stats = setupStats();
   var state = space.state = createState();
   var renderer, stage, graphics;
+  var stage, root;
 
   setupCanvas();
 
-  var world = new World(state.stage);
+  var world = new World(root);
+  var camera = new Camera(root);
   var commands = new Commands(stage, world);
+
   setupShips();
 
   /**
@@ -56,13 +59,11 @@ function createGame() {
     state.el.append(state.renderer.view);
 
     stage = new PIXI.Stage();
-    state.stage = new PIXI.DisplayObjectContainer();
-    state.stage.interactive = true;
-    stage.addChild(state.stage);
+    root = new PIXI.DisplayObjectContainer();
+    stage.addChild(root);
 
-    //stage = state.stage = new PIXI.Stage();
-    graphics = state.graphics = new PIXI.Graphics();
-    state.stage.addChild(graphics);
+    //graphics = state.graphics = new PIXI.Graphics();
+    //state.stage.addChild(graphics);
   }
 
   function setupShips() {
@@ -77,7 +78,7 @@ function createGame() {
       point.y = rand(edgeBuffer, height - edgeBuffer);
     };
 
-    for (var i = 0; i < 50; i++) {
+    for (var i = 0; i < 1; i++) {
       var ship = new Ship();
       ship.tint = space.colors.random();
       ship.rotation = rand(0, Math.PI * 2);
@@ -100,6 +101,7 @@ function createGame() {
   function gameLoop() {
 
     // Update entities.
+    camera.update();
     world.update();
     commands.update();
 

@@ -17,7 +17,7 @@ Ship = function(x, y, tint) {
   this.target = null;
   this.anchor.x = .4;
   this.anchor.y = .5;
-  this.speed = 1;
+  this.speed = 0;
   this.counter = 0;
   this.counter2 = 0;
 };
@@ -63,6 +63,36 @@ Ship.prototype.aim = function() {
 };
 
 
+Ship.prototype.userControl = function() {
+
+  if (Key.isDown(Key.W)) {
+    this.speed = 2;
+  } else if (Key.isDown(Key.S)) {
+    this.speed = -1;
+  } else {
+    this.speed = 0;
+  }
+
+  if (Key.isDown(Key.A)) {
+    this.rotation -= .10;
+  }
+
+  if (Key.isDown(Key.D)) {
+    this.rotation += .10;
+  }
+
+  if (Key.isDown(Key.SPACE)) {
+    this.counter += 1;
+    if (this.counter > 13) {
+      this.fireBullet();
+      this.counter = 0;
+    }
+  }
+
+  this.velocity.fromRad(this.rotation, this.speed);
+};
+
+
 Ship.prototype.collide = function(other) {
   if (other.type == 'planet' && other.position == this.target) {
     var state = space.state;
@@ -83,14 +113,15 @@ Ship.prototype.collide = function(other) {
 
 Ship.prototype.update = function() {
   //this.findTarget();
-  this.aim();
+  //this.aim();
+  this.userControl();
   this.updatePosition();
 
-  this.counter += 1;
+  /*this.counter += 1;
   if (this.counter > 2) {
     this.counter = 0;
     this.fireBullet();
-  }
+  } */
 };
 
 
@@ -123,7 +154,7 @@ Ship.prototype.findTarget = function() {
 Ship.prototype.fireBullet = function() {
   var bullet = new Bullet();
   bullet.tint = this.tint;
-  bullet.velocity = this.directionVector(0, 2);
+  bullet.velocity = this.directionVector(0, 2.5);
   bullet.position = this.radiusPointByRad(0, bullet.radius + .5);
   this.world.add(bullet);
 };
