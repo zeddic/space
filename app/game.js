@@ -32,10 +32,9 @@ function createGame() {
 
   setupCanvas();
 
-  var entities = state.entities = createEntities(stage);
-  var planets = setupPlanets();
+  var world = new World(state.stage);
+  var commands = new Commands(stage, world);
   setupShips();
-  var commands = createCommands(state, stage, entities);
 
   /**
    * Sets up WebGL stats plugin for FPS.
@@ -55,45 +54,16 @@ function createGame() {
   function setupCanvas() {
     renderer = state.renderer = new PIXI.WebGLRenderer(state.width, state.height);
     state.el.append(state.renderer.view);
-    stage = state.stage = new PIXI.Stage();
+
+    stage = new PIXI.Stage();
+    state.stage = new PIXI.DisplayObjectContainer();
+    state.stage.interactive = true;
+    stage.addChild(state.stage);
+
+    //stage = state.stage = new PIXI.Stage();
     graphics = state.graphics = new PIXI.Graphics();
-    stage.addChild(graphics);
+    state.stage.addChild(graphics);
   }
-
-  /**
-   * Sets up the starting planets.
-   */
-  function setupPlanets() {
-    var planets = [];
-    var width = state.width;
-    var height = state.height;
-    var edgeBuffer = 40;
-    var planetBuffer = 50;
-    var numPlanets = 10;
-
-    var randomizePoint = function(point) {
-      point.x = rand(edgeBuffer, width - edgeBuffer);
-      point.y = rand(edgeBuffer, height - edgeBuffer);
-    };
-
-    var isCloseToOtherPlanet = function(planet) {
-      return entities.planets().some(function(other) {
-        var minDistance = planet.radius + other.radius;
-        return space.util.withinRange(planet.position, other.position, minDistance)
-      });
-    };
-
-    for (var i = 0; i < 0; i++) {
-      var planet = objects.createPlanet();
-      do {
-        randomizePoint(planet.position);
-      } while (isCloseToOtherPlanet(planet));
-
-      entities.add(planet);
-    };
-
-    return planets;
-  };
 
   function setupShips() {
     var width = state.width;
@@ -107,24 +77,21 @@ function createGame() {
       point.y = rand(edgeBuffer, height - edgeBuffer);
     };
 
-    var point = new Vector();
-    for (var i = 0; i < 0; i++) {
-      var ship = entities.createShip();
+    for (var i = 0; i < 50; i++) {
+      var ship = new Ship();
       ship.tint = space.colors.random();
-      randomizePoint(point);
-      space.collisions.moveTo(ship, point);
+      ship.rotation = rand(0, Math.PI * 2);
+      randomizePoint(ship.position);
+      world.add(ship);
     };
-
   }
 
   /**
    * Creates a new world of planets.
    */
   function reset() {
-    stage.removeChildren();
-    entities = state.entities = createEntities(stage);
-    planets = setupPlanets();
-    commands = createCommands(state, stage, entities);
+    world.clearAll();
+    setupShips();
   }
 
   /**
@@ -133,12 +100,8 @@ function createGame() {
   function gameLoop() {
 
     // Update entities.
-    state.graphics.clear();
-    //state.entities.forEach(invoke('update'));
-
-    entities.updateAll();
+    world.update();
     commands.update();
-    space.collisions.check(entities);
 
     renderer.render(stage);
 

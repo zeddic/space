@@ -1,0 +1,129 @@
+
+/**
+ * @constructor
+ */
+Ship = function(x, y, tint) {
+  this.setup({
+    type: 'ship',
+    x: x,
+    y: y,
+    mass: 5,
+    radius: 8,
+    tint: tint,
+    width: 20,
+    height: 20
+  });
+
+  this.target = null;
+  this.anchor.x = .4;
+  this.anchor.y = .5;
+  this.speed = 1;
+  this.counter = 0;
+  this.counter2 = 0;
+};
+
+
+Ship.prototype = Object.create(GameObjectPrototype);
+mixinPhysics(Ship.prototype);
+
+
+/**
+ * @const {PIXI.Texture}
+ */
+Ship.prototype.texture = PIXI.Texture.fromImage('textures/ship.png');
+
+
+Ship.prototype.aim = function() {
+  this.rotation += .025;
+  this.velocity.fromRad(this.rotation, this.speed);
+  return;
+
+  if(!this.target) {
+    return;
+  }
+
+  var target = this.target;
+  var dX = target.x - this.x;
+  var dY = target.y - this.y;
+  var distance = this.position.distanceTo(target);
+
+  if (distance < this.waitDistance) {
+    this.velocity.set(0, 0);
+    return;
+  }
+
+  var scaler = Math.min(distance, this.speed);
+  this.velocity.x = dX;
+  this.velocity.y = dY;
+  this.velocity.normalize();
+  this.velocity.x *= scaler;
+  this.velocity.y *= scaler;
+
+  this.lookAtVelocity();
+};
+
+
+Ship.prototype.collide = function(other) {
+  if (other.type == 'planet' && other.position == this.target) {
+    var state = space.state;
+    state.entities.remove(this);
+
+    if (other.tint == this.tint) {
+      other.population++;
+    } else {
+      other.population--;
+      if (other.population <= 0) {
+        other.population = 1;
+        other.tint = this.tint;
+      }
+    }
+  }
+};
+
+
+Ship.prototype.update = function() {
+  //this.findTarget();
+  this.aim();
+  this.updatePosition();
+
+  this.counter += 1;
+  if (this.counter > 2) {
+    this.counter = 0;
+    this.fireBullet();
+  }
+};
+
+
+Ship.prototype.findTarget = function() {
+  this.counter2++;
+  if (this.counter2 > 60 * 5) {
+    this.counter2 = 0;
+    var others = space.collisions.findWithinRadius(this.position, 500);
+
+
+    var self = this;
+
+    function isShip(obj) {
+      return obj.type == 'ship' && obj !== self;
+    }
+
+    function compareDistance(a, b) {
+      var dA = self.position.distanceToSq(a.position);
+      var dB = self.position.distanceToSq(b.position);
+      return dA - dB;
+    }
+
+    others = others.filter(isShip).sort(compareDistance);
+
+    this.target = others[0];
+  }
+};
+
+
+Ship.prototype.fireBullet = function() {
+  var bullet = new Bullet();
+  bullet.tint = this.tint;
+  bullet.velocity = this.directionVector(0, 2);
+  bullet.position = this.radiusPointByRad(0, bullet.radius + .5);
+  this.world.add(bullet);
+};
