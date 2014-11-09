@@ -11,7 +11,21 @@ Camera = function(root) {
 
 Camera.prototype.update = function() {
 
+  //if (Key.isDown(Ke))
+
   return;
+
+  var zoomSpeed = .01;
+
+  if (Key.isDown(Key.Q)) {
+    this.root.scale.x += zoomSpeed;
+    this.root.scale.y += zoomSpeed;
+  }
+
+  if (Key.isDown(Key.Z)) {
+    this.root.scale.x -= zoomSpeed;
+    this.root.scale.y -= zoomSpeed;
+  }
 
   var moveSpeed = this.KEYBOARD_MOVE_SPEED;
 

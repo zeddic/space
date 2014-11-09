@@ -116,6 +116,7 @@ Ship.prototype.update = function() {
   //this.aim();
   this.userControl();
   this.updatePosition();
+  this.fireBullet();
 
   /*this.counter += 1;
   if (this.counter > 2) {
