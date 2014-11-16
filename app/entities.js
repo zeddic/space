@@ -69,7 +69,7 @@ Entities.prototype.createBullet = function() {
 Entities.prototype.updateAll = function() {
   for (var key in this.all) {
     var items = this.all[key];
-    for (var i = 0, item; item = items[i]; i++) {
+    for (var i = items.length - 1, item; item = items[i]; i--) {
       item.update();
     }
   }

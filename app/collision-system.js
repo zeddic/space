@@ -57,6 +57,10 @@ CollisionSystem.prototype.collides = function(o1, o2) {
     return false;
   }
 
+  if (o2.dead || o1.dead) {
+    return false;
+  }
+
   if (o1.type == 'bullet' && o2.type == 'bullet') {
     return false;
   }

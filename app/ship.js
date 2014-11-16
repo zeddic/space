@@ -18,8 +18,31 @@ Ship = function(x, y, tint) {
   this.anchor.x = .4;
   this.anchor.y = .5;
   this.speed = 0;
-  this.counter = 0;
+  this.maxHealth = 50;
+  this.health = this.maxHealth;
+
+  var choice = randInt(0, 2);
+
+  switch (choice) {
+    case 0:
+      //this.behavior = new ErraticBehavior(this);
+      //this.tint = space.colors.RED;
+      this.behavior = new FlyAtTarget(this); 
+      this.tint = space.colors.ORANGE;
+      break;
+    case 1: 
+      this.behavior = new FlyAtTarget(this); 
+      this.tint = space.colors.WHITE;
+      break;
+    case 2: 
+      this.behavior = new FlyAtTarget(this); 
+      this.tint = space.colors.ORANGE;
+      break;
+  }
+
+
   this.counter2 = 0;
+  this.iFire = new Interval(1, true).target(this.fireBullet, this);
 };
 
 
@@ -82,11 +105,7 @@ Ship.prototype.userControl = function() {
   }
 
   if (Key.isDown(Key.SPACE)) {
-    this.counter += 1;
-    if (this.counter > 13) {
-      this.fireBullet();
-      this.counter = 0;
-    }
+    this.iFire.trigger();
   }
 
   this.velocity.fromRad(this.rotation, this.speed);
@@ -94,6 +113,15 @@ Ship.prototype.userControl = function() {
 
 
 Ship.prototype.collide = function(other) {
+
+  if (other.type == 'bullet') {
+    this.health = Math.max(0, this.health - 5);
+    if (this.health == 0) {
+      this.world.remove(this);
+      this.dead = true;
+    }
+  }
+
   if (other.type == 'planet' && other.position == this.target) {
     var state = space.state;
     state.entities.remove(this);
@@ -108,21 +136,34 @@ Ship.prototype.collide = function(other) {
       }
     }
   }
+
+
+
+
 };
 
 
 Ship.prototype.update = function() {
-  //this.findTarget();
-  //this.aim();
-  this.userControl();
-  this.updatePosition();
-  this.fireBullet();
+  //this.iFire.updateOnly();
 
-  /*this.counter += 1;
-  if (this.counter > 2) {
-    this.counter = 0;
-    this.fireBullet();
-  } */
+  //this.userControl();
+  //this.updatePosition();
+
+  this.behavior && this.behavior.update();
+
+
+  var healthY = this.y + 15;
+  var healthX = this.x - 10;
+  var totalHealthLength = 10 * 2;
+  var healthLength = totalHealthLength * (this.health / this.maxHealth);
+
+  graphics.lineStyle(4, 0x575757, .6);
+  graphics.moveTo(healthX, healthY);
+  graphics.lineTo(healthX + totalHealthLength, healthY);
+
+  graphics.lineStyle(4, 0xed1414, .6);
+  graphics.moveTo(healthX, healthY);
+  graphics.lineTo(healthX + healthLength, healthY);
 };
 
 
@@ -152,10 +193,11 @@ Ship.prototype.findTarget = function() {
 };
 
 
-Ship.prototype.fireBullet = function() {
+Ship.prototype.fireBullet = function(opt_speed) {
+  var speed = opt_speed || 6;
   var bullet = new Bullet();
   bullet.tint = this.tint;
-  bullet.velocity = this.directionVector(0, 2.5);
+  bullet.velocity = this.directionVector(0, opt_speed);
   bullet.position = this.radiusPointByRad(0, bullet.radius + .5);
   this.world.add(bullet);
 };

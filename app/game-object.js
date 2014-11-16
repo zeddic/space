@@ -12,6 +12,7 @@ GameObjectPrototype.$inits.push(function(data) {
   this.width = data.width || this.width;
   this.height = data.height || this.height;
   this.type = data.type || this.type;
+  this.dead = false;
   data.world && data.world.add(this);
 });
 
@@ -109,6 +110,10 @@ var mixinPhysics = function(proto) {
   };
 
   proto.lookAtVelocity = function() {
-    this.rotation = -this.velocity.rad() + (Math.PI / 2);
+
+    //console.log('Velocity is: ' + this.velocity.x + ',' + this.velocity.y);
+
+    this.rotation = this.velocity.rad();// + (Math.PI);
+    //console.log('Resulting rotation is' + this.rotation);
   };
 };

@@ -111,7 +111,8 @@ Vector.prototype.lerp = function(v, alpha) {
 };
 
 Vector.prototype.rad = function() {
-  return Math.atan2(this.x, this.y);
+  //return Math.atan2(this.x, this.y);
+  return Math.atan2(this.y, this.x);
 };
 
 Vector.prototype.deg = function() {
@@ -138,7 +139,18 @@ Vector.prototype.fromRad = function(rad, opt_length) {
 
 Vector.fromRad = function(rad, opt_length) {
   return new Vector().fromRad(rad, opt_length);
-}
+};
+
+Vector.delta = function(v1, v2) {
+  if (v1.position && v2.position) {
+    return new Vector(
+        v1.position.x - v2.position.x,
+        v1.position.y - v2.position.y);
+  }
+
+  return new Vector(v1.x - v2.x, v1.y - v2.y);
+};
+
 
 // constructor
 Vector.prototype.constructor = Vector;

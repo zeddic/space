@@ -36,6 +36,11 @@ function randInt(min, max) {
   return Math.floor(Math.random()*(max-min) + min); 
 }
 
+var TWO_PI = Math.PI * 2;
+
+function normalizeRad(rad) {
+  return rad - TWO_PI * Math.floor((rad + Math.PI) / TWO_PI)
+};
 
 space.util.withinDistance = function(point1, point2, range) {
   var dX = point1.x - point2.x;

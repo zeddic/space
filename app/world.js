@@ -27,6 +27,11 @@ World.prototype.add = function(obj) {
 
 
 World.prototype.remove = function(obj) {
+  if (obj.dead) {
+    return;
+  }
+
+  obj.dead = true;
   obj.world = null;
   this.entities.remove(obj);
   this.collisions.unregister(obj);
@@ -37,6 +42,7 @@ World.prototype.clearAll = function() {
   this.entities.clearAll();
   this.collisions.clearAll();
 };
+
 
 /**
  *
@@ -62,4 +68,9 @@ World.prototype.isOffscreen = function(obj) {
       obj.x - obj.radius > sWidth ||
       obj.y + obj.radius < 0 ||
       obj.y - obj.radius > sHeight;
-}
+};
+
+
+World.prototype.findWithinRadius = function(point, radius) {
+  return this.collisions.findWithinRadius(point, radius);
+};

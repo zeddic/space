@@ -28,7 +28,7 @@ space.game = {};
 function createGame() {
   var stats = setupStats();
   var state = space.state = createState();
-  var renderer, stage, graphics;
+  var renderer, stage;
   var stage, root;
 
   setupCanvas();
@@ -61,6 +61,8 @@ function createGame() {
     stage = new PIXI.Stage();
     root = new PIXI.DisplayObjectContainer();
     stage.addChild(root);
+    graphics = new PIXI.Graphics();
+    root.addChild(graphics);
 
     //graphics = state.graphics = new PIXI.Graphics();
     //state.stage.addChild(graphics);
@@ -99,6 +101,7 @@ function createGame() {
    * Primary game-loop called ~60fps.
    */
   function gameLoop() {
+    graphics.clear();
 
     // Update entities.
     camera.update();
