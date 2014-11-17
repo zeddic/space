@@ -17,6 +17,14 @@ Array.prototype.contains = function(item) {
   return this.indexOf(item) !== -1;
 };
 
+
+Math.sign = function(x) {
+  x = +x;
+  if (x === 0 || isNaN(x))
+    return x;
+  return x > 0 ? 1 : -1;
+}
+
 // ================================
 // UTILITY METHODS
 // ================================
@@ -34,6 +42,18 @@ function rand(min, max) {
 
 function randInt(min, max) {
   return Math.floor(Math.random()*(max-min) + min); 
+}
+
+function decimalToHexString(d) {
+  var hex = Number(d).toString(16);
+  hex = "000000".substr(0, 6 - hex.length) + hex; 
+  return hex;
+}
+
+function compareDistance(a, b) {
+  var dA = ship.position.distanceToSq(a.position);
+  var dB = ship.position.distanceToSq(b.position);
+  return dA - dB;
 }
 
 var TWO_PI = Math.PI * 2;

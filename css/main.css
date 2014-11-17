@@ -6,6 +6,12 @@ body {
   font-size: 12px;
 }
 
+h2 {
+  margin: 2px 0;
+  font-size: 13px;
+  font-weight; normal;
+}
+
 .game-content {
   overflow: hidden;
   display: block;
@@ -36,12 +42,16 @@ canvas {
 }
 
 .card header {
-  font-size: 20px;
+  font-size: 15px;
   margin: 3px 0;
 }
 
 .card-list {
   padding-left: 19px;
+}
+
+.card-section {
+  margin: 4px 0 8px 0;
 }
 
 .btn {
@@ -64,3 +74,37 @@ canvas {
   position: relative;
 }
 
+.color-list {
+  margin: 0;
+  padding: 0;
+}
+
+.color-list > li {
+  margin: 0;
+  padding: 0;
+  display: inline-block;
+}
+
+.color-input {
+  display: inline-block;
+  vertical-align: middle;
+  width: 17px;
+  height: 17px;
+  border: 1px solid rgba(0, 0, 0, .5);
+  margin: 0 4px 4px 0;
+  opacity: .2;
+  cursor: pointer;
+}
+
+.color-input:focus {
+  opacity: .4;
+}
+
+.color-input.active {
+  border: 1px solid rgba(0, 0, 0, 1);
+  opacity: 1;
+}
+
+.radio-label {
+  display: block;
+}

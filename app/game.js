@@ -63,9 +63,6 @@ function createGame() {
     stage.addChild(root);
     graphics = new PIXI.Graphics();
     root.addChild(graphics);
-
-    //graphics = state.graphics = new PIXI.Graphics();
-    //state.stage.addChild(graphics);
   }
 
   function setupShips() {
@@ -80,7 +77,7 @@ function createGame() {
       point.y = rand(edgeBuffer, height - edgeBuffer);
     };
 
-    for (var i = 0; i < 1; i++) {
+    for (var i = 0; i < 0; i++) {
       var ship = new Ship();
       ship.tint = space.colors.random();
       ship.rotation = rand(0, Math.PI * 2);
@@ -127,7 +124,10 @@ function createGame() {
     start: function() {
       requestAnimationFrame(gameLoop);
     },
-    randomize: reset
+    randomize: reset,
+    setSpawnColor: commands.setSpawnColor.bind(commands),
+    setSpawnBehavior: commands.setSpawnBehavior.bind(commands),
+    setSpawnRotation: commands.setSpawnRotation.bind(commands)
   };
 };
 

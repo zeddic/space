@@ -21,24 +21,7 @@ Ship = function(x, y, tint) {
   this.maxHealth = 50;
   this.health = this.maxHealth;
 
-  var choice = randInt(0, 2);
 
-  switch (choice) {
-    case 0:
-      //this.behavior = new ErraticBehavior(this);
-      //this.tint = space.colors.RED;
-      this.behavior = new FlyAtTarget(this); 
-      this.tint = space.colors.ORANGE;
-      break;
-    case 1: 
-      this.behavior = new FlyAtTarget(this); 
-      this.tint = space.colors.WHITE;
-      break;
-    case 2: 
-      this.behavior = new FlyAtTarget(this); 
-      this.tint = space.colors.ORANGE;
-      break;
-  }
 
 
   this.counter2 = 0;
@@ -118,7 +101,6 @@ Ship.prototype.collide = function(other) {
     this.health = Math.max(0, this.health - 5);
     if (this.health == 0) {
       this.world.remove(this);
-      this.dead = true;
     }
   }
 
@@ -136,10 +118,6 @@ Ship.prototype.collide = function(other) {
       }
     }
   }
-
-
-
-
 };
 
 
@@ -150,7 +128,6 @@ Ship.prototype.update = function() {
   //this.updatePosition();
 
   this.behavior && this.behavior.update();
-
 
   var healthY = this.y + 15;
   var healthX = this.x - 10;

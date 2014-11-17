@@ -30,6 +30,10 @@ Vector.prototype.invert = function(v) {
   return this;
 };
 
+Vector.prototype.multiply = function(s) {
+  return this.multiplyScalar(s);
+};
+
 Vector.prototype.multiplyScalar = function(s) {
     this.x *= s;
     this.y *= s;
@@ -62,6 +66,14 @@ Vector.prototype.lengthSq = function() {
 
 Vector.prototype.normalize = function() {
   return this.divideScalar(this.length());
+};
+
+Vector.prototype.truncate = function(max) {
+  if (this.lengthSq() > max * max) {
+    this.normalize().multiply(max);
+  }
+
+  return this;
 };
 
 Vector.prototype.distanceTo = function(v) {
@@ -108,6 +120,10 @@ Vector.prototype.lerp = function(v, alpha) {
   this.x += (v.x - this.x) * alpha;
   this.y += (v.y - this.y) * alpha;
   return this;
+};
+
+Vector.prototype.isNull = function() {
+  return this.x == 0 && this.y == 0;
 };
 
 Vector.prototype.rad = function() {

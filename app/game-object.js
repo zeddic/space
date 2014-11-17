@@ -92,6 +92,11 @@ GameObjectPrototype.removeFromWorld = function() {
 };
 
 
+GameObjectPrototype.withinDistanceOf = function(other, distance) {
+  return space.util.withinDistance(this.position, other, distance);
+};
+
+
 /**
  * Mixin physics methods onto a prototype.
  */
@@ -112,8 +117,10 @@ var mixinPhysics = function(proto) {
   proto.lookAtVelocity = function() {
 
     //console.log('Velocity is: ' + this.velocity.x + ',' + this.velocity.y);
-
-    this.rotation = this.velocity.rad();// + (Math.PI);
+    if (!this.velocity.isNull()) {
+      this.rotation = this.velocity.rad();
+    }
+    // + (Math.PI);
     //console.log('Resulting rotation is' + this.rotation);
   };
 };

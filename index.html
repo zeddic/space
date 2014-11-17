@@ -26,16 +26,46 @@
     <script src="app/app.js"></script>
 		<meta charset="utf-8">
   </head>
-  <body onload="start()" ng-app="game">
+  <body ng-app="game">
     <div class="game-content"></div>
     <section class="card" ng-controller="CardController">
       <header>Space!!</header>
-      <ul class="card-list">
-        <li>Click to spawn ships</li>
-        <li>Ships fire bullets at your mouse</li>
-      </ul>
-      <button type="button" class="btn" ng-click="randomize()">New World</button>
-      <button type="button" class="btn" ng-click="dismiss()">Ok! Lets go!</button>
+      Click to spawn ships with the following options.
+
+      <section class="card-section">
+        <h2>AI</h2>
+        <label class="radio-label"><input type="radio" name="behavior" value="ai" ng-model="behavior">State Machine</label>
+        <label class="radio-label"><input type="radio" name="behavior" value="noop" ng-model="behavior">Do-Nothing</label>
+        <label class="radio-label"><input type="radio" name="behavior" value="spin" ng-model="behavior">Spin</label>
+        <label class="radio-label"><input type="radio" name="behavior" value="erratic" ng-model="behavior">Erratic</label>
+        <label class="radio-label"><input type="radio" name="behavior" value="steering" ng-model="behavior">Steering</label>
+      </section>
+
+      <section class="card-section">
+        <h2>Color</h2>
+        <ul class="color-list">
+          <li ng-repeat="color in colors">
+            <button type="button"
+                style="background:{{color.hex}}" 
+                ng-click="selectColor(color)"
+                class="color-input"
+                ng-class="{active: activeColor == color.raw}"></button>
+          </li>
+        </ul>
+      </section>
+
+      <section class="card-section">
+        <h2>Rotation</h2>
+        <input type="range" name="rotation" ng-model="rotation"
+            min="-3.149" max="3.149" step=".01">
+        {{ rotation }}
+      </section>
+
+      <section class="card-section">
+        <h2>Other Actions</h2>
+        <button type="button" class="btn" ng-click="randomize()">New World</button>
+        <button type="button" class="btn" ng-click="dismiss()">Dismiss</button>
+      </section>
     </section>
   </body>
 </html>
