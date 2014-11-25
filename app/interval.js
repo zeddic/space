@@ -74,7 +74,7 @@ Interval.prototype.triggerOnNextUpdate = function() {
  * Updates the interval but does not trigger anything if the limit is reached.
  */
 Interval.prototype.updateOnly = function() {
-  this.update(false);
+  return this.update(false);
 };
 
 
@@ -88,20 +88,22 @@ Interval.prototype.updateOnly = function() {
  *     when the interval limit is reached. Defaults to true. If false,
  *     the interval will stay at the limit until it is triggered by
  *     either a future update or a manual call to trigger().
+ * @return {boolean} True if the interval was triggered and reset.
  */
 Interval.prototype.update = function(opt_trigger) {
   var trigger = (opt_trigger === undefined) ? true : opt_trigger;
   this.count = Math.min(this.count + this.delta, this.limit);
-  trigger && this.trigger();
+  return trigger && this.trigger();
 };
 
 
 /**
  * Triggers the interval if it is time to fire. Otherwise, does nothing.
+ * @return {boolean} True if the interval was triggered.
  */
 Interval.prototype.trigger = function() {
   if (this.count < this.limit && !this.triggerNext) {
-    return;
+    return false;
   }
 
   this.triggerNext = false;
@@ -114,6 +116,8 @@ Interval.prototype.trigger = function() {
   for (var i = 0, child; child = this.children[i]; i++) {
     child.update(opt_trigger);
   }
+
+  return true;
 };
 
 

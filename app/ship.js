@@ -97,7 +97,7 @@ Ship.prototype.userControl = function() {
 
 Ship.prototype.collide = function(other) {
 
-  if (other.type == 'bullet') {
+  if (other.type == 'bullet' && other.tint != this.tint) {
     this.health = Math.max(0, this.health - 5);
     if (this.health == 0) {
       this.world.remove(this);
@@ -134,13 +134,13 @@ Ship.prototype.update = function() {
   var totalHealthLength = 10 * 2;
   var healthLength = totalHealthLength * (this.health / this.maxHealth);
 
-  graphics.lineStyle(4, 0x575757, .6);
-  graphics.moveTo(healthX, healthY);
-  graphics.lineTo(healthX + totalHealthLength, healthY);
+  // graphics.lineStyle(4, 0x575757, .6);
+  // graphics.moveTo(healthX, healthY);
+  // graphics.lineTo(healthX + totalHealthLength, healthY);
 
-  graphics.lineStyle(4, 0xed1414, .6);
-  graphics.moveTo(healthX, healthY);
-  graphics.lineTo(healthX + healthLength, healthY);
+  // graphics.lineStyle(4, 0xed1414, .6);
+  // graphics.moveTo(healthX, healthY);
+  // graphics.lineTo(healthX + healthLength, healthY);
 };
 
 
@@ -169,6 +169,19 @@ Ship.prototype.findTarget = function() {
   }
 };
 
+
+Ship.prototype.fireBulletAt = function(target, opt_speed) {
+  var speed = opt_speed || this.speed + 2;
+  var offset = this.radius + .5;
+
+  var dir = Vector.delta(target, this.position).normalize();
+
+  var bullet = new Bullet();
+  bullet.tint = this.tint;
+  bullet.velocity = dir.clone().scale(speed);
+  bullet.position = dir.scale(offset).add(this.position);
+  this.world.add(bullet);
+};
 
 Ship.prototype.fireBullet = function(opt_speed) {
   var speed = opt_speed || 6;

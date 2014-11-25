@@ -40,7 +40,7 @@ Bullet.prototype.update = function() {
  *
  */
 Bullet.prototype.collide = function(other) {
-  if (other.type != 'bullet') {
+  if (other.type != 'bullet' && other.tint != this.tint) {
     this.removeFromWorld();
   }
 };

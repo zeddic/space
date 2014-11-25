@@ -9,9 +9,9 @@ game.module.controller('CardController', function($element, $scope) {
 
   start();
 
-  $scope.behavior = 'ai';
+  $scope.behavior = 'steering';
   $scope.rotation = 0;
-  $scope.activeColor = space.colors.RED;
+  $scope.activeColor = space.colors.WHITE;
   $scope.colors = [];
 
   space.colors.colors.forEach(function(color) {
@@ -31,6 +31,8 @@ game.module.controller('CardController', function($element, $scope) {
       case 'spin': cstr = SpinyBehavior; break;
       case 'erratic': cstr = ErraticBehavior; break;
       case 'steering': cstr = SteeringBehavior; break;
+      case 'mouse': cstr = FollowMouseBehavior; break;
+      case 'flock': cstr = FlockBehavior; break;
     }
     space.game.setSpawnBehavior(cstr);
     space.game.setSpawnRotation(Number($scope.rotation));

@@ -16,6 +16,7 @@
     <script src="app/collision-system.js"></script>
     <script src="app/entities.js"></script>
     <script src="app/game-object.js"></script>
+    <script src="app/steering.js"></script>
     <script src="app/behaviors.js"></script>
     <script src="app/ship.js"></script>
     <script src="app/bullet.js"></script>
@@ -39,6 +40,8 @@
         <label class="radio-label"><input type="radio" name="behavior" value="spin" ng-model="behavior">Spin</label>
         <label class="radio-label"><input type="radio" name="behavior" value="erratic" ng-model="behavior">Erratic</label>
         <label class="radio-label"><input type="radio" name="behavior" value="steering" ng-model="behavior">Steering</label>
+        <label class="radio-label"><input type="radio" name="behavior" value="mouse" ng-model="behavior">Follow Mouse</label>
+        <label class="radio-label"><input type="radio" name="behavior" value="flock" ng-model="behavior">Flock</label>
       </section>
 
       <section class="card-section">

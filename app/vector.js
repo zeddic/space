@@ -13,6 +13,12 @@ Vector.prototype.add = function(v) {
   return this;
 };
 
+Vector.prototype.addMultiple = function(v, s) {
+  this.x += (v.x * s);
+  this.y += (v.y * s);
+  return this;
+};
+
 Vector.prototype.addTo = function(v) {
   v.add(this);
   return this;
@@ -35,34 +41,46 @@ Vector.prototype.multiply = function(s) {
 };
 
 Vector.prototype.multiplyScalar = function(s) {
-    this.x *= s;
-    this.y *= s;
-    return this;
+  this.x *= s;
+  this.y *= s;
+  return this;
+};
+
+Vector.prototype.scale = function(s) {
+  return this.multiply(s);
 };
 
 Vector.prototype.divideScalar = function(s) {
-    if(s === 0) {
-        this.x = 0;
-        this.y = 0;
-    } else {
-        var invScalar = 1 / s;
-        this.x *= invScalar;
-        this.y *= invScalar;
-    }
-    return this;
+  if(s === 0) {
+    this.x = 0;
+    this.y = 0;
+  } else {
+    var invScalar = 1 / s;
+    this.x *= invScalar;
+    this.y *= invScalar;
+  }
+  return this;
 };
 
 Vector.prototype.dot = function(v) {
   return this.x * v.x + this.y * v.y;
 };
 
-Vector.prototype.length = function(v) {
+Vector.prototype.length = function() {
   return Math.sqrt(this.x * this.x + this.y * this.y);
 };
 
 Vector.prototype.lengthSq = function() {
   return this.x * this.x + this.y * this.y;
 };
+
+Vector.prototype.len = function() {
+  return this.length();
+};
+
+Vector.prototype.len2 = function() {
+  return this.lengthSq();
+}
 
 Vector.prototype.normalize = function() {
   return this.divideScalar(this.length());
@@ -166,6 +184,11 @@ Vector.delta = function(v1, v2) {
 
   return new Vector(v1.x - v2.x, v1.y - v2.y);
 };
+
+Vector.of = function(x, y) {
+  return new Vector(x, y);
+};
+
 
 
 // constructor
