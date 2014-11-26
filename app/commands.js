@@ -4,7 +4,7 @@ global.mouse = new Vector(0, 0);
 /**
  * Detects and handles user input.
  */
-Commands = function(stage, world) {
+Commands = function(root, stage, world) {
 
   this.world = world;
 
@@ -13,7 +13,7 @@ Commands = function(stage, world) {
 
   this.mouseDown = false;
 
-  this.listenForEvents(stage);
+  this.listenForEvents(stage, root);
 
   this.iSpawn = new Interval(4).target(this.spawnShip, this);
 
@@ -22,18 +22,27 @@ Commands = function(stage, world) {
   this.spawnBehavior = FlyAtTarget;
 
   this.spawnRotation = 0;
+
+
+  //root.mousemove = function(data) {
+  //  console.log('here!');
+  //}
 };
 
-Commands.prototype.listenForEvents = function(stage) {
+Commands.prototype.listenForEvents = function(stage, root) {
   var self = this;
 
   stage.mousemove = function(data) {
-    global.mouse = data.global;
-    self.mouse = data.global;
+    //console.log('here');
+
+    var point = data.getLocalPosition(root);
+
+    global.mouse = point;// data.global;
+    self.mouse = point;//data.global;
   };
 
   stage.mousedown = function(data) {
-    self.mouse = data.global;
+    self.mouse = data.getLocalPosition(root); //data.global;
     self.mouseDown = true;
   };
 

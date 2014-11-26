@@ -35,7 +35,7 @@ function createGame() {
 
   var world = new World(root);
   var camera = new Camera(root);
-  var commands = new Commands(stage, world);
+  var commands = new Commands(root, stage, world);
 
   setupShips();
 
@@ -60,6 +60,8 @@ function createGame() {
 
     stage = new PIXI.Stage();
     root = new PIXI.DisplayObjectContainer();
+    root.interactive = true;
+    root.hitArea = new PIXI.Rectangle(0, 0, 1000, 1000);
     stage.addChild(root);
     graphics = new PIXI.Graphics();
     root.addChild(graphics);
@@ -99,6 +101,15 @@ function createGame() {
    */
   function gameLoop() {
     graphics.clear();
+
+    //console.log(root.getBounds());
+
+      graphics.lineStyle(12, 0xFFFFFF, 1);
+    graphics.moveTo(450, 450);
+    graphics.lineTo(550, 550);
+
+    graphics.moveTo(550, 450)
+    graphics.lineTo(450, 550);
 
     // Update entities.
     camera.update();

@@ -9,7 +9,7 @@ game.module.controller('CardController', function($element, $scope) {
 
   start();
 
-  $scope.behavior = 'steering';
+  $scope.behavior = 'mouse';
   $scope.rotation = 0;
   $scope.activeColor = space.colors.WHITE;
   $scope.colors = [];
