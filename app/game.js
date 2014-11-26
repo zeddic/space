@@ -35,7 +35,7 @@ function createGame() {
 
   var world = new World(root);
   var camera = new Camera(root);
-  var commands = new Commands(root, stage, world);
+  var commands = new Commands(root, stage, world, camera);
 
   setupShips();
 

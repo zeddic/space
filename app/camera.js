@@ -8,18 +8,26 @@ Camera = function(root) {
   this.root = root;
   this.KEYBOARD_MOVE_SPEED = 5;
 
-  this.temp = new Vector(500, 500);
+  this.setupEventListeners();
+};
 
-    //new Vector(500, 500);
-    //this.root.anchor = new Vector(.5, .5);
+Camera.prototype.setupEventListeners = function() {
+  var self = this;
+
+  // Listen for mouse scroll events.
+  window.addEventListener('wheel', function(e) {
+    var deltaY = e.wheelDelta || e.detail;
+    console.log(e);
+    self.onWheelChange(e.clientX, e.clientY, deltaY);
+    e.preventDefault();
+  }, false);
+};
+
+Camera.prototype.onWheelChange = function(x, y, deltaY) {
+  this.zoom(x, y, deltaY > 0)
 };
 
 Camera.prototype.update = function() {
-
-  //if (Key.isDown(Ke))
-//this.root.pivot = global.mouse;
-
-
   var zoomSpeed = .01;
 
   if (Key.isDown(Key.Q)) {

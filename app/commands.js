@@ -4,7 +4,9 @@ global.mouse = new Vector(0, 0);
 /**
  * Detects and handles user input.
  */
-Commands = function(root, stage, world) {
+Commands = function(root, stage, world, camera) {
+
+  this.camera = camera;
 
   this.world = world;
 
