@@ -6,11 +6,11 @@ function Steering(options) {
   this.maxSpeed = options.maxSpeed || 4;
   this.maxForce = options.maxForce || .05;
 
-  this.wanderRad = 0;
+  this.wanderRad = rand(0, Math.PI * 2);
 
   this.WANDER_CIRCLE_DISTANCE = this.maxSpeed;
-  this.WANDER_CIRCLE_RADIUS = 2;
-  this.WANDER_RADIUS_CHANGE = .2;
+  this.WANDER_CIRCLE_RADIUS = this.maxSpeed;
+  this.WANDER_RADIUS_CHANGE = 1;
 };
 
 Steering.prototype.apply = function(force) {
@@ -34,7 +34,7 @@ Steering.prototype.flee = function(target, opt_range) {
 };
 
 Steering.prototype.pursue = function(target, opt_velocity) {
-  this.seek(this.leadTarget(target, opt_velocity));
+  return this.seek(this.leadTarget(target, opt_velocity));
 };
 
 Steering.prototype.evade = function(target, opt_velocity) {
@@ -60,11 +60,18 @@ Steering.prototype.wander = function(options) {
 };
 
 Steering.prototype.home = function(target, maxRange) {
-  var range2 = Vector.delta(target, this.entity.position).len2();
+
+  if (this.inRangeOf(target, maxRange)) {
+    return new Vector(0, 0);
+  }
+
+  return this.seek(target);
+
+  /*var range2 = Vector.delta(target, this.entity.position).len2();
   var maxRange2 = maxRange * maxRange;
   var homesick = range2 / maxRange2;
 
-  return this.seek(target).scale(.4 + homesick);
+  return this.seek(target).scale(.4 + homesick); */
 };
 
 

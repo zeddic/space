@@ -1,46 +1,56 @@
 
-/**
- * @constructor
- */
-Bullet = function(x, y, tint) {
-  this.setup({
-    type: 'bullet',
-    x: x,
-    y: y,
-    tint: tint || space.colors.random(),
-    width: 3,
-    height: 3,
-    radius: 2
-  });
+define(function(require) {
 
-  this.anchor.x = .5;
-  this.anchor.y = .5;
-};
+  var PIXI = require('lib/pixi');
+  var GameObjectPrototype = require('game-object');
+  var mixins = require('mixins');
 
 
-Bullet.prototype = Object.create(GameObjectPrototype);
-mixinPhysics(Bullet.prototype);
+  /**
+   * @constructor
+   */
+  Bullet = function(x, y, tint) {
+    this.setup({
+      type: 'bullet',
+      x: x,
+      y: y,
+      tint: tint || space.colors.random(),
+      width: 3,
+      height: 3,
+      radius: 2
+    });
 
-Bullet.prototype.texture = PIXI.Texture.fromImage('textures/bullet.png');
+    this.anchor.x = .5;
+    this.anchor.y = .5;
+  };
 
 
-/**
- *
- */
-Bullet.prototype.update = function() {
-  this.updatePosition();
+  Bullet.prototype = Object.create(GameObjectPrototype);
+  mixins.physics(Bullet.prototype);
 
-  if (this.isOffscreen()) {
-    this.removeFromWorld();
-  }
-};
+  Bullet.prototype.texture = PIXI.Texture.fromImage('textures/bullet.png');
 
 
-/**
- *
- */
-Bullet.prototype.collide = function(other) {
-  if (other.type != 'bullet' && other.tint != this.tint) {
-    this.removeFromWorld();
-  }
-};
+  /**
+   *
+   */
+  Bullet.prototype.update = function() {
+    this.updatePosition();
+
+    if (this.isOffscreen()) {
+      this.removeFromWorld();
+    }
+  };
+
+
+  /**
+   *
+   */
+  Bullet.prototype.collide = function(other) {
+    if (other.type != 'bullet' && other.tint != this.tint) {
+      this.removeFromWorld();
+    }
+  };
+
+  return Bullet;
+});

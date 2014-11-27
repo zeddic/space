@@ -1,3 +1,5 @@
+define(function() {  
+
 Vector = function(x, y) {
   this.x = x || 0;
   this.y = y || 0;
@@ -190,6 +192,9 @@ Vector.of = function(x, y) {
 };
 
 
-
 // constructor
 Vector.prototype.constructor = Vector;
+
+return Vector;
+
+});  // end define

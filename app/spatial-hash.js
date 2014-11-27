@@ -1,6 +1,5 @@
-(function(w) {
-  'use strict';
-  
+define(function() {
+
   var POWER_OF_TWO = 5;
 
   function SpatialHash() {
@@ -68,5 +67,5 @@
     return items;
   };
 
-  w.SpatialHash = SpatialHash;
-})(this);
+  return SpatialHash;
+});
