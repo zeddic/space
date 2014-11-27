@@ -1,39 +1,38 @@
 define(function(require) {
 
+  var Color = require('util/color');
   var angular = require('lib/angular');
   var createGame = require('game');
   var behaviors = require('behaviors');
+  var util = require('util/util');
 
-  function start() {
-    space.game = createGame();
-    space.game.start();
-  }
 
-  var game = {};
+  var space = {};
 
   /**
    * @type {angular.Module}
    */
-  game.module = angular.module('game', []);
+  space.module = angular.module('game', []);
 
-  game.module.controller('CardController', function($element, $scope) {
+  space.module.controller('CardController', function($element, $scope) {
 
-    start();
+    var game = createGame();
+    game.start();
 
     $scope.behavior = 'mouse';
     $scope.rotation = 0;
-    $scope.activeColor = space.colors.WHITE;
+    $scope.activeColor = Color.WHITE;
     $scope.colors = [];
 
-    space.colors.colors.forEach(function(color) {
+    Color.colors.forEach(function(color) {
       $scope.colors.push({
         raw: color,
-        hex: '#' + decimalToHexString(color)
+        hex: '#' + util.decimalToHexString(color)
       });
     });
 
     var syncSettings = function() {
-      space.game.setSpawnColor($scope.activeColor);
+      game.setSpawnColor($scope.activeColor);
 
       var cstr = behaviors.NullBehavior;
       switch($scope.behavior) {
@@ -45,15 +44,15 @@ define(function(require) {
         case 'mouse': cstr = behaviors.FollowMouseBehavior; break;
         case 'flock': cstr = behaviors.FlockBehavior; break;
       }
-      space.game.setSpawnBehavior(cstr);
-      space.game.setSpawnRotation(Number($scope.rotation));
+      game.setSpawnBehavior(cstr);
+      game.setSpawnRotation(Number($scope.rotation));
     };
 
     $scope.dismiss = function() {
       $element.hide();
     };
 
-    $scope.randomize = space.game.randomize;
+    $scope.randomize = game.randomize;
 
     $scope.selectColor = function(color) {
       $scope.activeColor = color.raw;

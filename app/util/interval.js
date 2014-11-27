@@ -1,4 +1,6 @@
-define(function() {
+define(function(require) {
+
+  var random = require('util/random');
 
   /**
    * A utility class that can trigger function(s) so many times per second as
@@ -28,7 +30,7 @@ define(function() {
     this.limit = 100;
 
     /** @type {number} The counter incremented ever update */
-    this.count = randomize ? rand(0, 100) : 0;
+    this.count = randomize ? random.value(0, 100) : 0;
 
     /** @type {number} How much to increment every update */
     this.delta = timesPerSecond * this.limit / Interval.FPS;
@@ -60,7 +62,7 @@ define(function() {
    * Randomizes the intervals progress.
    */
   Interval.prototype.randomize = function() {
-    this.count = rand(0, 100);
+    this.count = random.value(0, 100);
     return this;
   };
 

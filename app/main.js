@@ -1,14 +1,18 @@
 requirejs.config({
   baseUrl: '../app',
   paths: {
-      lib: '../lib'
+      lib: '../lib',
+      jquery: '../lib/jquery'
   },
   shim: {
+    'lib/angular': {
+      exports: 'angular'
+    },
     'lib/pixi': {
       exports: 'PIXI'
     },
-    'lib/angular': {
-      exports: 'angular'
+    'lib/stats.min': {
+      exports: 'Stats'
     }
   },
 
@@ -16,27 +20,7 @@ requirejs.config({
 });
 
 requirejs([
-  'lib/stats.min',
-  'lib/three.min.js',
-  'lib/pixi',
   'lib/jquery',
-  'lib/angular',
-  'key',
-  'vector',
-  'util',
-  'interval',
-  'spatial-hash',
-  'collision-system',
-  'entities',
-  'game-object',
-  'steering',
-  'behaviors',
-  'ship',
-  'bullet',
-  'commands',
-  'world',
-  'camera',
-  'game',
   'app',
 ], function() {
 

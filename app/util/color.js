@@ -1,4 +1,7 @@
-util.colors = function() {
+define(function(require) {
+
+  var random = require('util/random');
+
   var RED = 0xF90101;
   var BLUE = 0x0266C8;
   var WHITE = 0xFFFFFF;
@@ -8,7 +11,7 @@ util.colors = function() {
 
   return {
     random: function() {
-      var color = colors[randInt(0, colors.length)];
+      var color = colors[random.valueInt(0, colors.length - 1)];
       return color;
     },
     colors: colors,
@@ -18,4 +21,4 @@ util.colors = function() {
     GREEN: GREEN,
     ORANGE: ORANGE
   };
-}();
+});

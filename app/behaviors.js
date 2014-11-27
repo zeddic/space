@@ -1,8 +1,11 @@
-define(function() {
+define(function(require) {
 
-  var Interval = require('interval');
+  var GameState = require('game-state');
+  var Interval = require('util/interval');
+  var Steering = require('steering');
   var Vector = require('vector');
-
+  var random = require('util/random');
+  var util = require('util/util');
 
   function ErraticBehavior(ship) {
     this.ship = ship;
@@ -10,9 +13,7 @@ define(function() {
 
     this.iChangeDirection = new Interval(1, true).target(this.changeDirection, this);
     this.iFireBullet = new Interval(1).target(this.ship.fireBullet.bind(this.ship, BULLET_SPEED));
-
     this.turnLeft = false;
-
     this.ship.velocity = Vector.fromRad(ship.rotation, 1);
   };
 
@@ -28,7 +29,7 @@ define(function() {
   };
 
   ErraticBehavior.prototype.changeDirection = function() {
-    this.turnLeft = (randInt(0, 2) == 1);
+    this.turnLeft = (random.valueInt(0, 1) == 1);
     this.iChangeDirection.randomize();
   };
 
@@ -96,13 +97,13 @@ define(function() {
      * Attemps to turn the ship to the given radian. Rate limited by turn speed.
      */
     function turnShipTowards(targetRotation) {
-      var toTurn = normalizeRad(targetRotation - ship.rotation);
+      var toTurn = util.normalizeRad(targetRotation - ship.rotation);
       turnShipBy(toTurn);
     }
 
     function attack() {
       if (ship.withinDistanceOf(target, TOO_CLOSE_DISTANCE)) {
-        state = randInt(0, 2) == 0 ? State.AVOID : State.FLY_BY;
+        state = random.valueInt(0, 1) == 0 ? State.AVOID : State.FLY_BY;
       }
 
       // Estimate where the target will be based on when a bullet could reach it.
@@ -115,7 +116,7 @@ define(function() {
       // Point towards where the target will be.
       var delta = new Vector(dX, dY);
       var targetRotation = delta.rad();
-      var toTurn = normalizeRad(targetRotation - ship.rotation);
+      var toTurn = util.normalizeRad(targetRotation - ship.rotation);
 
       turnShipBy(toTurn);
 
@@ -130,7 +131,7 @@ define(function() {
     }
 
     function decideAvoidAngle() {
-      avoidDir = rand(Math.PI/1.5, Math.PI) * Math.sign(rand(-1, 1));
+      avoidDir = random.value(Math.PI/1.5, Math.PI) * Math.sign(random.value(-1, 1));
     }
 
     function avoid() {
@@ -159,7 +160,7 @@ define(function() {
       }
 
       if (!flyByDir) {
-        var offsetDir = rand(-Math.PI/6, Math.PI/6);
+        var offsetDir = random.value(-Math.PI/6, Math.PI/6);
         flyByDir = Vector.delta(target, ship).rad() + offsetDir;
       }
 
@@ -219,7 +220,7 @@ define(function() {
     });
 
     this.update = function() {
-      target = global.mouse;
+      target = GameState.mouse;
 
       var force = new Vector();
 

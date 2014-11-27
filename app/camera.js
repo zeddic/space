@@ -1,6 +1,8 @@
 define(function(require) {
 
+  var GameState = require('game-state');
   var Key = require('key');
+  var Vector = require('vector');
 
   /**
    * 
@@ -76,9 +78,8 @@ define(function(require) {
    */
 
   Camera.prototype.zoomCenter = function(isZoomIn, amount) {
-    var state = space.state;
-    var width = state.width;
-    var height = state.height;
+    var width = GameState.screen.width;
+    var height = GameState.screen.height;
     this.zoom(width/2, height/2, isZoomIn, amount);
   };
 

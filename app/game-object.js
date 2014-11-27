@@ -1,4 +1,8 @@
-define(['lib/pixi'], function(PIXI) {
+define(function(require) {
+
+  var PIXI = require('lib/pixi');
+  var Vector = require('vector');
+  var util = require('util/util');
 
   var GameObjectPrototype = Object.create(PIXI.Sprite.prototype);
 
@@ -69,7 +73,7 @@ define(['lib/pixi'], function(PIXI) {
   };
 
   GameObjectPrototype.containsPoint = function(point) {
-    return space.util.within(point, this);
+    return util.within(point, this);
   };
 
   GameObjectPrototype.update = function() {
@@ -94,11 +98,8 @@ define(['lib/pixi'], function(PIXI) {
 
 
   GameObjectPrototype.withinDistanceOf = function(other, distance) {
-    return space.util.withinDistance(this.position, other, distance);
+    return util.withinDistance(this.position, other, distance);
   };
-
-
-  
 
   return GameObjectPrototype;
 });

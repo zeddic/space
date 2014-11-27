@@ -3,40 +3,18 @@ define(function(require) {
 
   var PIXI = require('lib/pixi');
   var Camera = require('camera');
+  var Color = require('util/color');
   var Commands = require('commands');
+  var GameState = require('game-state');
+  var Stats = require('lib/stats.min');
   var World = require('world');
   var behaviors = require('behaviors');
+  var random = require('util/random');
 
   PIXI.Point = Vector;
 
-  function createState() {
-    var el = $('.game-content');
-
-    var state = {
-      el:  el,
-      width: el.innerWidth(),
-      height: el.innerHeight(),
-      graphics: null,
-      renderer: null,
-      stage: null,
-      entities: []
-    };
-
-    $(window).resize(function() {
-      state.width = el.innerWidth();
-      state.height = el.innerHeight();
-      state.renderer && state.renderer.resize(state.width, state.height);
-    });
-
-    return state;
-  }
-
-  space.state = {};
-  space.game = {};
-
   function createGame() {
     var stats = setupStats();
-    var state = space.state = createState();
     var renderer, stage;
     var stage, root;
 
@@ -64,8 +42,11 @@ define(function(require) {
      * Sets up the the webgl canvas and stage.
      */
     function setupCanvas() {
-      renderer = state.renderer = new PIXI.WebGLRenderer(state.width, state.height);
-      state.el.append(state.renderer.view);
+      renderer = GameState.renderer = new PIXI.WebGLRenderer(
+          GameState.screen.width,
+          GameState.screen.height);
+
+      GameState.el.append(GameState.renderer.view);
 
       stage = new PIXI.Stage();
       root = new PIXI.DisplayObjectContainer();
@@ -77,8 +58,8 @@ define(function(require) {
     }
 
     function setupShips() {
-      var width = state.width * 5;
-      var height = state.height * 5;
+      var width = GameState.screen.width * 5;
+      var height = GameState.screen.height * 5;
       var edgeBuffer = 40;
       var planetBuffer = 50;
       var numPlanets = 10;
@@ -87,15 +68,15 @@ define(function(require) {
         //point.x = rand(-width/2, width/2);
         //point.y = rand(-height/2, height/2);
 
-        point.x = rand(-1000, 1000);
-        point.y = rand(-1000, 1000);
+        point.x = random.value(-1000, 1000);
+        point.y = random.value(-1000, 1000);
       };
 
       for (var i = 0; i < 1; i++) {
         var ship = new Ship();
         ship.behavior = new behaviors.FlockBehavior(ship);
-        ship.tint = space.colors.random();
-        ship.rotation = rand(0, Math.PI * 2);
+        ship.tint = Color.random();
+        ship.rotation = random.value(0, Math.PI * 2);
         randomizePoint(ship.position);
         world.add(ship);
       };
@@ -103,7 +84,7 @@ define(function(require) {
 
       var big = new Ship();
       big.behavior = new behaviors.EatBehavior(big);
-      big.tint = space.colors.RED;
+      big.tint = Color.RED;
       big.width = 60;
       big.height = 70;
       big.radius = 24;

@@ -1,6 +1,8 @@
 define(function(require) {
 
   var SpatialHash = require('spatial-hash');
+  var Vector = require('vector');
+  var random = require('util/random');
 
   /**
    * Checks for collisions between entities.
@@ -100,8 +102,8 @@ define(function(require) {
       var dY = o1.position.y - o2.position.y;
 
       if (dX == 0 && dY == 0) {
-        dX = rand(-.5, .5);
-        dY = rand(-.5, .5);
+        dX = random.value(-.5, .5);
+        dY = random.value(-.5, .5);
       }
 
       delta.set(dX, dY);

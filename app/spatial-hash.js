@@ -1,5 +1,6 @@
-define(function() {
+define(function(require) {
 
+  var util = require('util/util');
   var POWER_OF_TWO = 5;
 
   function SpatialHash() {
@@ -60,7 +61,7 @@ define(function() {
   SpatialHash.prototype.getInRadius = function(point, radius) {
     var items = this.getInRange(point, radius);
     for (var i = items.length - 1, item; item = items[i]; i--) {
-      if(!space.util.withinDistance(point, item.position, radius)) {
+      if(!util.withinDistance(point, item.position, radius)) {
         items.splice(i, 1);
       };
     }

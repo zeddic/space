@@ -1,9 +1,10 @@
 define(function(require) {
 
   var PIXI = require('lib/pixi');
+  var Bullet = require('bullet');
   var GameObjectPrototype = require('game-object');
   var mixins = require('mixins');
-  var Interval = require('interval');
+  var Interval = require('./util/interval');
 
   /**
    * @constructor
@@ -104,21 +105,6 @@ define(function(require) {
       this.health = Math.max(0, this.health - 5);
       if (this.health == 0) {
         this.world.remove(this);
-      }
-    }
-
-    if (other.type == 'planet' && other.position == this.target) {
-      var state = space.state;
-      state.entities.remove(this);
-
-      if (other.tint == this.tint) {
-        other.population++;
-      } else {
-        other.population--;
-        if (other.population <= 0) {
-          other.population = 1;
-          other.tint = this.tint;
-        }
       }
     }
   };

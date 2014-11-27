@@ -1,7 +1,8 @@
 define(function(require) {
 
-  var Entities = require('entities');
   var CollisionSystem = require('collision-system');
+  var Entities = require('entities');
+  var GameState = require('game-state');
 
   /**
    * @param {PIXI.DisplayObjectContainer} root
@@ -64,9 +65,10 @@ define(function(require) {
   };
 
   World.prototype.isOffscreen = function(obj) {
-    var state = space.state;
-    var sWidth = state.width;
-    var sHeight = state.height;
+    // TODO(scott): Switch this to use world bounds - we now
+    // support pan and zoom.
+    var sWidth = GameState.screen.width;
+    var sHeight = GameState.screen.height;
 
     return obj.x + obj.radius < 0 ||
         obj.x - obj.radius > sWidth ||

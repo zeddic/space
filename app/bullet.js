@@ -2,6 +2,7 @@
 define(function(require) {
 
   var PIXI = require('lib/pixi');
+  var Color = require('util/color');
   var GameObjectPrototype = require('game-object');
   var mixins = require('mixins');
 
@@ -14,7 +15,7 @@ define(function(require) {
       type: 'bullet',
       x: x,
       y: y,
-      tint: tint || space.colors.random(),
+      tint: tint || Color.random(),
       width: 3,
       height: 3,
       radius: 2

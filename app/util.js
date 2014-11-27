@@ -7,24 +7,7 @@ var util = {};
 // EXTENSIONS
 // ================================
 
-Array.prototype.remove = function(item) {
-  var index = this.indexOf(item);
-  if (index !== -1) {
-    this.splice(index, 1);
-  }
-};
 
-Array.prototype.contains = function(item) {
-  return this.indexOf(item) !== -1;
-};
-
-
-Math.sign = function(x) {
-  x = +x;
-  if (x === 0 || isNaN(x))
-    return x;
-  return x > 0 ? 1 : -1;
-}
 
 // ================================
 // UTILITY METHODS

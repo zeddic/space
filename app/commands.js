@@ -1,11 +1,10 @@
 define(function(require) {
 
-  var Interval = require('interval');
+  var GameState = require('game-state');
+  var Interval = require('util/interval');
   var Ship = require('ship');
   var behaviors = require('behaviors');
-
-  var global = {};
-  global.mouse = new Vector(0, 0);
+  var Color = require('util/color');
 
   /**
    * Detects and handles user input.
@@ -23,29 +22,22 @@ define(function(require) {
 
     this.listenForEvents(stage, root);
 
-    this.iSpawn = new Interval(4).target(this.spawnShip, this);
+    this.iSpawn = new Interval(30).target(this.spawnShip, this);
 
-    this.spawnColor = space.colors.RED;
+    this.spawnColor = Color.RED;
 
     this.spawnBehavior = behaviors.FlyAtTarget;
 
     this.spawnRotation = 0;
-
-
-    //root.mousemove = function(data) {
-    //  console.log('here!');
-    //}
   };
 
   Commands.prototype.listenForEvents = function(stage, root) {
     var self = this;
 
     stage.mousemove = function(data) {
-      //console.log('here');
-
       var point = data.getLocalPosition(root);
 
-      global.mouse = point;// data.global;
+      GameState.mouse = point;
       self.mouse = point;//data.global;
     };
 
