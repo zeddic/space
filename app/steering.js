@@ -254,7 +254,12 @@ define(function(require) {
   };
 
   Steering.prototype.inRangeOf = function(target, range) {
-    return range && this.entity.withinDistanceOf(target, range);
+    var p1 = this.entity.position;
+    var p2 = target.position || target;
+    var dX = p1.x - p2.x;
+    var dY = p1.y - p2.y;
+
+    return (dX * dX + dY * dY) < (range * range);
   };
 
   return Steering;

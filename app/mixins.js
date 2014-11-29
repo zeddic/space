@@ -11,22 +11,18 @@ define(function() {
       this.velocity = data.velocity || new Vector();
     });
 
-    proto.updatePosition = function() {
-      this.moveBy(this.velocity);
-    };
+    // proto.updatePosition = function() {
+    //   this.moveBy(this.velocity);
+    // };
 
     proto.collide = function(other) {
       // To override.
     };
 
     proto.lookAtVelocity = function() {
-
-      //console.log('Velocity is: ' + this.velocity.x + ',' + this.velocity.y);
-      if (!this.velocity.isNull()) {
+     if (!this.velocity.isNull()) {
         this.rotation = this.velocity.rad();
       }
-      // + (Math.PI);
-      //console.log('Resulting rotation is' + this.rotation);
     };
   };
 

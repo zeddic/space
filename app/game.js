@@ -72,10 +72,11 @@ define(function(require) {
         point.y = random.value(-1000, 1000);
       };
 
-      for (var i = 0; i < 1; i++) {
+      for (var i = 0; i < 900; i++) {
+
         var ship = new Ship();
         ship.behavior = new behaviors.FlockBehavior(ship);
-        ship.tint = Color.random();
+        ship.tint = Color.GREEN;//Color.random();
         ship.rotation = random.value(0, Math.PI * 2);
         randomizePoint(ship.position);
         world.add(ship);
@@ -105,8 +106,6 @@ define(function(require) {
      */
     function gameLoop() {
       graphics.clear();
-
-      //console.log(root.getBounds());
 
       graphics.lineStyle(5, 0xFFFFFF, 1);
       graphics.moveTo(0, -50);

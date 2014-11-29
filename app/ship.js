@@ -153,7 +153,6 @@ define(function(require) {
       }
 
       others = others.filter(isShip).sort(compareDistance);
-
       this.target = others[0];
     }
   };

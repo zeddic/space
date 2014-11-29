@@ -288,41 +288,44 @@ define(function(require) {
 
 
   function FlockBehavior(ship) {
-    var finder = new Finder(ship);
-    var iFindOthers = new Interval(2).randomize();
-    var steer = new Steering({
+    this.ship = ship;
+    this.finder = new Finder(ship);
+    this.iFindOthers = new Interval(1).randomize();
+    this.steer = new Steering({
       entity: ship,
       maxForce: .5,
       maxSpeed: 4
     });
 
-    var friends = [];
-    var hunter = [];
-
-    var home = new Vector(0, 0);
-
-    this.update = function() {
-      if (iFindOthers.update()) {
-        friends = finder.find(300, finder.isFriendlyShip.bind(finder));
-        hunter = finder.find(300, finder.isHunterShip.bind(finder));
-      }
-
-      var force = new Vector();
-      force.add(steer.wander());
-      force.add(steer.home(home, 1000).scale(4));
-      force.add(steer.seperation(friends, 20).scale(10));
-      force.add(steer.alignment(friends, 30).scale(10));
-      force.add(steer.cohesion(friends, 80).scale(8));
-      force.add(steer.seperation(hunter, 300).scale(15));
-
-      //force.add(steer.seperation(bullets, 60).scale(50));
-
-      steer.apply(force);
-      ship.lookAtVelocity();
-      ship.updatePosition();
-    };
+    this.friends = [];
+    this.hunter = [];
+    this.force = new Vector();
+    this.home = new Vector(0, 0);
   };
 
+  FlockBehavior.prototype.update = function() {
+    if (this.iFindOthers.update()) {
+      this.friends = this.finder.find(50, this.finder.isFriendlyShip.bind(this.finder));
+      this.hunter = this.finder.find(300, this.finder.isHunterShip.bind(this.finder));
+    }
+
+    var force = this.force;
+    var steer = this.steer;
+
+    force.set(0, 0);
+    force.add(steer.wander());
+    force.add(steer.home(this.home, 1000).scale(4));
+    force.add(steer.seperation(this.friends, 20).scale(10));
+    force.add(steer.alignment(this.friends, 30).scale(10));
+    force.add(steer.cohesion(this.friends, 80).scale(8));
+    force.add(steer.seperation(this.hunter, 300).scale(15));
+
+    //force.add(steer.seperation(bullets, 60).scale(50)); */
+    steer.apply(force);
+
+    this.ship.lookAtVelocity();
+    this.ship.updatePosition();
+  };
 
   function Finder(entity) {
     this.entity = entity;

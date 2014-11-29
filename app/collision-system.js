@@ -3,6 +3,7 @@ define(function(require) {
   var SpatialHash = require('spatial-hash');
   var Vector = require('vector');
   var random = require('util/random');
+  var util = require('util/util');
 
   /**
    * Checks for collisions between entities.
@@ -25,16 +26,14 @@ define(function(require) {
   };
 
   CollisionSystem.prototype.move = function(obj, vector) {
-    this.hash.remove(obj);
     obj.position.add(vector);
-    this.hash.put(obj);
+    this.hash.update(obj);
   };
 
   CollisionSystem.prototype.moveTo = function(obj, vector) {
-    this.hash.remove(obj);
     obj.position.x = point.x;
     obj.position.y = point.y;
-    this.hash.put(obj);
+    this.hash.update(obj);
   };
 
   CollisionSystem.prototype.findWithinRadius = function(point, radius) {

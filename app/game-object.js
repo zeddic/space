@@ -96,9 +96,12 @@ define(function(require) {
     this.world && this.world.remove(this);
   };
 
-
   GameObjectPrototype.withinDistanceOf = function(other, distance) {
     return util.withinDistance(this.position, other, distance);
+  };
+
+  GameObjectPrototype.updatePosition = function() {
+    this.moveBy(this.velocity);
   };
 
   return GameObjectPrototype;

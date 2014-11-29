@@ -1,40 +1,12 @@
 // Karma configuration
-// Generated on Sun Nov 09 2014 10:54:01 GMT-0800 (PST)
+// Generated on Thu Nov 27 2014 22:16:40 GMT-0800 (PST)
 
 module.exports = function(config) {
-
-  var groups = {
-    src: [
-      'app/*.js',
-      'app/**/*.js',
-      // 'app/input.js',
-      // 'app/vector.js',
-      // 'app/util.js',
-      // 'app/spatial-hash.js',
-      // 'app/collision-system.js',
-      // 'app/entities.js',
-      // 'app/game-object.js',
-      // 'app/ship.js',
-      // 'app/bullet.js',
-      // 'app/commands.js',
-      // 'app/world.js',
-      // 'app/*.js'
-    ],
-    lib: [
-      'lib/jquery.js',
-      'lib/angular.js',
-      'lib/pixi.js'
-    ],
-    test: [
-      'test/test-main.js'
-      //'test/**/*_test.js'
-    ]
-  };
-
   config.set({
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
-    basePath: '../',
+    basePath: '',
+
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
@@ -42,22 +14,12 @@ module.exports = function(config) {
 
 
     // list of files / patterns to load in the browser
-    //files: [].concat(groups.lib, groups.src, groups.test),
     files: [
-      {pattern: 'lib/**/*.js', included: false},
-      {pattern: 'app/**/*.js', included: false},
-      {pattern: 'test/**/*_test.js', included: false},
-      'test/test-main.js',
     ],
-
-    proxies: {
-      '/textures/': 'http://localhost:8000/textures/'
-    },
 
 
     // list of files to exclude
     exclude: [
-      'app/main.js',
     ],
 
 
