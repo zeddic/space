@@ -36,11 +36,10 @@ define(function(require) {
   Ship.prototype = Object.create(GameObjectPrototype);
   mixins.physics(Ship.prototype);
 
-
   /**
    * @const {PIXI.Texture}
    */
-  Ship.prototype.texture = PIXI.Texture.fromImage('textures/ship.png');
+  Ship.prototype.texture = PIXI.Texture.fromImage('textures/ship.png', false, PIXI.scaleModes.NEAREST);
 
 
   Ship.prototype.aim = function() {

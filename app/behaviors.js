@@ -189,11 +189,11 @@ define(function(require) {
       }
 
       // Draw line to current target.
-      if (target) {
+      /*if (target) {
         graphics.lineStyle(4, 0xFFFFFF, .2);
         graphics.moveTo(ship.x, ship.y);
         graphics.lineTo(target.x, target.y);
-      }
+      } */
     }
   };
 

@@ -25,6 +25,15 @@ define(function(require) {
     height: el.innerHeight()
   }
 
+  state.graphics = null;
+
+  state.background = {
+    fixed: {
+      container: null,
+      graphics: null
+    }
+  };
+
   /**
    * The last observed position of the mouse.
    */

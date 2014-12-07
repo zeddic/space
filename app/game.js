@@ -6,6 +6,7 @@ define(function(require) {
   var Color = require('util/color');
   var Commands = require('commands');
   var GameState = require('game-state');
+  var Planet = require('planet');
   var Stats = require('lib/stats.min');
   var World = require('world');
   var behaviors = require('behaviors');
@@ -15,7 +16,7 @@ define(function(require) {
 
   function createGame() {
     var stats = setupStats();
-    var renderer, stage;
+    var renderer, stage, graphics;
     var stage, root;
 
     setupCanvas();
@@ -49,12 +50,24 @@ define(function(require) {
       GameState.el.append(GameState.renderer.view);
 
       stage = new PIXI.Stage();
+
+      // Setup Fixed Background Layer
+      GameState.background.fixed.container = new PIXI.DisplayObjectContainer();
+      GameState.background.fixed.graphics = new PIXI.Graphics();
+      GameState.background.fixed.container.addChild(
+          GameState.background.fixed.graphics);
+      stage.addChild(GameState.background.fixed.container);
+
+      // Setup Foreground Layer
       root = new PIXI.DisplayObjectContainer();
       root.interactive = true;
       root.hitArea = new PIXI.Rectangle(0, 0, 1000, 1000);
       stage.addChild(root);
+
+      // Foreground Graphics
       graphics = new PIXI.Graphics();
       root.addChild(graphics);
+      GameState.graphics = graphics;
     }
 
     function setupShips() {
@@ -72,8 +85,7 @@ define(function(require) {
         point.y = random.value(-1000, 1000);
       };
 
-      for (var i = 0; i < 900; i++) {
-
+      for (var i = 0; i < 0; i++) {
         var ship = new Ship();
         ship.behavior = new behaviors.FlockBehavior(ship);
         ship.tint = Color.GREEN;//Color.random();
@@ -81,7 +93,6 @@ define(function(require) {
         randomizePoint(ship.position);
         world.add(ship);
       };
-
 
       var big = new Ship();
       big.behavior = new behaviors.EatBehavior(big);
@@ -91,6 +102,11 @@ define(function(require) {
       big.radius = 24;
       big.hunter = true;
       world.add(big);
+
+
+      var planet = new Planet(0, 0);
+      world.add(planet);
+
     }
 
     /**
@@ -105,18 +121,20 @@ define(function(require) {
      * Primary game-loop called ~60fps.
      */
     function gameLoop() {
+      GameState.background.fixed.graphics.clear();
       graphics.clear();
 
-      graphics.lineStyle(5, 0xFFFFFF, 1);
-      graphics.moveTo(0, -50);
-      graphics.lineTo(0, 50);
 
-      graphics.moveTo(-50, 0)
-      graphics.lineTo(50, 0);
+      // graphics.lineStyle(5, 0xFFFFFF, 1);
+      // graphics.moveTo(0, -50);
+      // graphics.lineTo(0, 50);
+
+      // graphics.moveTo(-50, 0)
+      // graphics.lineTo(50, 0);
 
 
-      graphics.lineStyle(20, 0xFFFFFF, .4);
-      graphics.drawCircle(0, 0, 1000);
+      // graphics.lineStyle(20, 0xFFFFFF, .4);
+      // graphics.drawCircle(0, 0, 1000);
 
       // Update entities.
       camera.update();

@@ -3,6 +3,9 @@ define(function(require) {
   var CollisionSystem = require('collision-system');
   var Entities = require('entities');
   var GameState = require('game-state');
+  var Interval = require('util/interval');
+  var PIXI = require('lib/pixi');
+  var StarField = require('star-field');
 
   /**
    * @param {PIXI.DisplayObjectContainer} root
@@ -15,14 +18,17 @@ define(function(require) {
 
     /** Reolves collisions among game objects. */
     this.collisions = new CollisionSystem();
+
+    /** Draws the star field background */
+    this.stars = new StarField(root);
   };
 
 
   World.prototype.update = function() {
     this.entities.updateAll();
     this.collisions.check(this.entities);
+    this.stars.update();
   };
-
 
   World.prototype.add = function(obj) {
     obj.world = this;
@@ -55,7 +61,6 @@ define(function(require) {
   World.prototype.moveBy = function(obj, vector) {
     this.collisions.move(obj, vector);
   };
-
 
   /**
    *

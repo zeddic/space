@@ -97,7 +97,6 @@ define(function(require) {
     var direction = isZoomIn ? 1 : -1;
     var factor = (1 + direction * amount);
 
-
     var beforeTransform = this.toLocal(x, y);
     root.scale.x *= factor;
     root.scale.y *= factor;
