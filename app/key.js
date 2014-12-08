@@ -13,6 +13,7 @@ define(function() {
     RIGHT: 39,
     DOWN: 40,
     SPACE: 32,
+    COMMAND: 91,
     
     isDown: function(keyCode) {
       return this.pressed[keyCode];

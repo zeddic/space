@@ -73,7 +73,7 @@ define(function(require) {
   };
 
   GameObjectPrototype.containsPoint = function(point) {
-    return util.within(point, this);
+    return util.distance.within(this.position, point, this.radius);
   };
 
   GameObjectPrototype.update = function() {
@@ -97,7 +97,7 @@ define(function(require) {
   };
 
   GameObjectPrototype.withinDistanceOf = function(other, distance) {
-    return util.withinDistance(this.position, other, distance);
+    return util.distance.within(this.position, other, distance);
   };
 
   GameObjectPrototype.updatePosition = function() {

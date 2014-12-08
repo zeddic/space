@@ -34,6 +34,13 @@ define(function(require) {
     }
   };
 
+  state.overlay = {
+    fixed: {
+      container: null,
+      graphics: null
+    }
+  };
+
   /**
    * The last observed position of the mouse.
    */

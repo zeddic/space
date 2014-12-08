@@ -23,13 +23,16 @@ define(function(require) {
     this.stars = new StarField(root);
   };
 
-
   World.prototype.update = function() {
     this.entities.updateAll();
     this.collisions.check(this.entities);
     this.stars.update();
   };
 
+
+  /**
+   * Add an object to the world.
+   */
   World.prototype.add = function(obj) {
     obj.world = this;
     this.entities.add(obj);
@@ -37,6 +40,9 @@ define(function(require) {
   };
 
 
+  /**
+   * Remove a specific object from the world.
+   */
   World.prototype.remove = function(obj) {
     if (obj.dead) {
       return;
@@ -49,6 +55,9 @@ define(function(require) {
   };
 
 
+  /**
+   * Remove everything!
+   */
   World.prototype.clearAll = function() {
     this.entities.clearAll();
     this.collisions.clearAll();
@@ -72,6 +81,8 @@ define(function(require) {
   World.prototype.isOffscreen = function(obj) {
     // TODO(scott): Switch this to use world bounds - we now
     // support pan and zoom.
+
+    return false;
     var sWidth = GameState.screen.width;
     var sHeight = GameState.screen.height;
 
@@ -83,6 +94,11 @@ define(function(require) {
 
   World.prototype.findWithinRadius = function(point, radius) {
     return this.collisions.findWithinRadius(point, radius);
+  };
+
+
+  World.prototype.findWithinRect = function(x, y, width, height) {
+    return this.collisions.findWithinRect(x, y, width, height);
   };
 
   return World;

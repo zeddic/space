@@ -9,7 +9,7 @@ define(function(require) {
 
   function ErraticBehavior(ship) {
     this.ship = ship;
-    var BULLET_SPEED = 1.5;
+    var BULLET_SPEED = 5;
 
     this.iChangeDirection = new Interval(1, true).target(this.changeDirection, this);
     this.iFireBullet = new Interval(1).target(this.ship.fireBullet.bind(this.ship, BULLET_SPEED));
@@ -43,16 +43,16 @@ define(function(require) {
       IDLE: 'idle'
     }
 
-    var SHIP_SPEED = 1;
-    var BULLET_SPEED = 2;
-    var TURN_SPEED = .06;
+    var SHIP_SPEED = 3;
+    var BULLET_SPEED = 5;
+    var TURN_SPEED = .12;
     var TOO_CLOSE_DISTANCE = 60;
     var AVOIDED_DISTANCE = 150;
     var FLY_BY_DISTANCE = 120;
     var DISTANCE_BUFFER = 20;
     var target;
     var iFindTarget = new Interval(1).randomize().target(findTarget).triggerOnNextUpdate();
-    var iFireBullet = new Interval(2).target(ship.fireBullet.bind(ship, BULLET_SPEED));
+    var iFireBullet = new Interval(30).target(ship.fireBullet.bind(ship, BULLET_SPEED));
     var iUpdateAvoidAngle = new Interval(1/2).target(decideAvoidAngle);
     var avoidDir = null;
     var flyByDir = null;
@@ -243,11 +243,9 @@ define(function(require) {
       maxForce: .035
     });
 
-    home = new Vector(1000, 1000);
+    var home = new Vector(0, 0);
 
     this.update = function() {
-      target = global.mouse;
-
       var force = new Vector();
 
       force.add(steer.wander({
@@ -256,7 +254,7 @@ define(function(require) {
         change: 1
       }));
 
-      force.add(steer.home(home, 1000));
+      force.add(steer.home(home, 1000).scale(4));
 
       steer.apply(force);
       ship.lookAtVelocity();

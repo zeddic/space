@@ -16,7 +16,8 @@ define(function(require) {
    * added to them which contained their encoded location.
    */
   SpatialHash.prototype.put = function(obj) {
-    var keys = this.getKeys_(obj.position, obj.radius);
+    var point = obj.position;
+    var keys = this.getKeysByRadius_(point.x, point.y, obj.radius);
     for (var i = 0, key; key = keys[i]; i++) {
       var list = this.hash[key] || (this.hash[key] = []);
       list.push(obj);
@@ -37,7 +38,7 @@ define(function(require) {
 
   /**
    * Returns all objects that exist in the same spaital hash location
-   * has the object (including itself).
+   * as the object (including itself).
    */
   SpatialHash.prototype.get = function(obj) {
     return this.getInRange(obj.position, obj.radius);
@@ -48,8 +49,9 @@ define(function(require) {
    * This should be called after any update to the objects position.
    */
   SpatialHash.prototype.update = function(obj) {
+    var point = obj.position;
     var beforeHash = obj.$spatialHash || '';
-    var currentKeys = this.getKeys_(obj.position, obj.radius);
+    var currentKeys = this.getKeysByRadius_(point.x, point.y, obj.radius);
     var currentHash = this.hashKeys_(currentKeys);
 
     if (currentHash == beforeHash) {
@@ -61,31 +63,31 @@ define(function(require) {
   };
 
   /**
-   * Returns all objects in the given square bounds.
+   * Returns all objects that fall in buckets that are within range of a point.
    */
   SpatialHash.prototype.getInRange = function(point, range) {
-    var keys = this.getKeys_(point, range);
-    var result = [];
-    for (var i = 0, key; key = keys[i]; i++) {
-      var list = this.hash[key];
-      if (list) {
-        result = result.concat(this.hash[key]);
-      }
-    }
-    return result;
+    var keys = this.getKeysByRadius_(point.x, point.y, range);
+    return this.keysToItems_(keys);
   };
+
+  /**
+   * Returns all objects that fall in buckets within the given rectangle.
+   */
+  SpatialHash.prototype.getInRect = function(x, y, width, height) {
+    var isInRect = util.distance.withinRectFn(x, y, width, height);
+    var keys = this.getKeysByRect_(x, y, width, height);
+    return this.keysToItems_(keys).filter(isInRect);
+  };
+
 
   /**
    * Returns all objects that are within the given radius of the given point.
    */
   SpatialHash.prototype.getInRadius = function(point, radius) {
-    var items = this.getInRange(point, radius);
-    for (var i = items.length - 1, item; item = items[i]; i--) {
-      if(!util.withinDistance(point, item.position, radius)) {
-        items.splice(i, 1);
-      };
-    }
-    return items;
+    // TODO(scott): This is really narrow phase detection. It should
+    // be moved up and out of the class.
+    var isInRadius = util.distance.withinFn(point, radius);
+    return this.getInRange(point, radius).filter(isInRadius);
   };
 
   /**
@@ -99,6 +101,48 @@ define(function(require) {
     var sY = (oY - range) >> POWER_OF_TWO;
     var eX = (oX + range) >> POWER_OF_TWO;
     var eY = (oY + range) >> POWER_OF_TWO;
+
+    var keys = [];
+    for (var y = sY; y <= eY; y++) {
+      for(var x = sX; x <= eX; x++) {
+        keys.push(x + ':' + y);
+      }
+    }
+
+    return keys;
+  };
+
+
+  /**
+   * Converts a list of keys to a list of objects identified by those keys.
+   * @return {Array.<Object>}
+   */
+  SpatialHash.prototype.keysToItems_ = function(keys) {
+    var result = [];
+    for (var i = 0, key; key = keys[i]; i++) {
+      var list = this.hash[key];
+      if (list) {
+        result = result.concat(this.hash[key]);
+      }
+    }
+    return result;
+  };
+
+  /**
+   * Gets all keys for bukets in a circle.
+   */
+  SpatialHash.prototype.getKeysByRadius_ = function(x, y, radius) {
+    return this.getKeysByRect_(x - radius, y - radius, radius * 2, radius * 2);
+  };
+
+  /**
+   * Gets all keys for buckets in a rectangle.
+   */
+  SpatialHash.prototype.getKeysByRect_ = function(oX, oY, width, height) {
+    var sX = (oX) >> POWER_OF_TWO;
+    var sY = (oY) >> POWER_OF_TWO;
+    var eX = (oX + width) >> POWER_OF_TWO;
+    var eY = (oY + height) >> POWER_OF_TWO;
 
     var keys = [];
     for (var y = sY; y <= eY; y++) {

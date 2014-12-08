@@ -43,7 +43,7 @@ define(function(require) {
      * Sets up the the webgl canvas and stage.
      */
     function setupCanvas() {
-      renderer = GameState.renderer = new PIXI.WebGLRenderer(
+      renderer = GameState.renderer = new PIXI.autoDetectRenderer(
           GameState.screen.width,
           GameState.screen.height);
 
@@ -68,6 +68,13 @@ define(function(require) {
       graphics = new PIXI.Graphics();
       root.addChild(graphics);
       GameState.graphics = graphics;
+
+      // Overlay layer
+      GameState.overlay.fixed.container = new PIXI.DisplayObjectContainer();
+      GameState.overlay.fixed.graphics = new PIXI.Graphics();
+      GameState.overlay.fixed.container.addChild(
+          GameState.overlay.fixed.graphics);
+      stage.addChild(GameState.overlay.fixed.container);
     }
 
     function setupShips() {
@@ -85,10 +92,10 @@ define(function(require) {
         point.y = random.value(-1000, 1000);
       };
 
-      for (var i = 0; i < 0; i++) {
+      for (var i = 0; i < 200; i++) {
         var ship = new Ship();
-        ship.behavior = new behaviors.FlockBehavior(ship);
-        ship.tint = Color.GREEN;//Color.random();
+        ship.behavior = new behaviors.WanderBehavior(ship);
+        ship.tint = Color.WHITE;
         ship.rotation = random.value(0, Math.PI * 2);
         randomizePoint(ship.position);
         world.add(ship);
@@ -102,7 +109,6 @@ define(function(require) {
       big.radius = 24;
       big.hunter = true;
       world.add(big);
-
 
       var planet = new Planet(0, 0);
       world.add(planet);
@@ -122,6 +128,7 @@ define(function(require) {
      */
     function gameLoop() {
       GameState.background.fixed.graphics.clear();
+      GameState.overlay.fixed.graphics.clear();
       graphics.clear();
 
 

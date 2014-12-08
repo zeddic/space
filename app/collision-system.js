@@ -40,6 +40,10 @@ define(function(require) {
     return this.hash.getInRadius(point, radius);
   };
 
+  CollisionSystem.prototype.findWithinRect = function(x, y, width, height) {
+    return this.hash.getInRect(x, y, width, height);
+  };
+
   CollisionSystem.prototype.check = function(entities) {
     var list = entities.list;
     for (var i = 0, entity; entity = list[i]; i++) {
