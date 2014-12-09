@@ -54,6 +54,18 @@ define(function() {
   util.normalizeRad = function(rad) {
     return rad - TWO_PI * Math.floor((rad + Math.PI) / TWO_PI)
   };
-  
+
+  util.invoke = function(fnName) {
+    return function(obj) {
+      return obj[fnName]();
+    }
+  };
+
+  util.negate = function(fn) {
+    return function(o) {
+      return !fn(o);
+    }
+  };
+
   return util;
 });

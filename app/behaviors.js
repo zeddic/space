@@ -248,13 +248,16 @@ define(function(require) {
     this.update = function() {
       var force = new Vector();
 
-      force.add(steer.wander({
-        distance: 10,
-        radius: 5,
-        change: 1
-      }));
-
-      force.add(steer.home(home, 1000).scale(4));
+      if (ship.target) {
+        force.add(steer.arrive(ship.target, 150, 50));
+      } else {
+        force.add(steer.wander({
+          distance: 10,
+          radius: 5,
+          change: 1
+        }));
+        force.add(steer.home(home, 1000).scale(4));
+      }
 
       steer.apply(force);
       ship.lookAtVelocity();

@@ -74,6 +74,23 @@ define(function(require) {
 
 
   /**
+   * Returns how close the update is to being triggered as
+   * a percentage value (0 to 1).
+   */
+  Interval.prototype.percent = function() {
+    return this.count / 100;
+  };
+
+
+  /**
+   * Return true if the interval will be triggered next update.
+   */
+  Interval.prototype.isReady = function() {
+    return this.count >= this.limit;
+  };
+
+
+  /**
    * Updates the interval but does not trigger anything if the limit is reached.
    */
   Interval.prototype.updateOnly = function() {

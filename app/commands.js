@@ -6,8 +6,51 @@ define(function(require) {
   var behaviors = require('behaviors');
   var Color = require('util/color');
   var Key = require('key');
+  var util = require('util/util');
 
 
+  /**
+   * Indicates where a command was just issued.
+   */
+  Indicator = function(point) {
+    this.iEnd = new Interval(4);
+    this.point = point;
+  };
+
+  Indicator.prototype.update = function() {
+    this.iEnd.updateOnly();
+
+    var g = GameState.graphics;
+    var point = this.point;
+
+    g.lineStyle(2, 0x15FF00, .8);
+    g.drawCircle(point.x, point.y, 1);
+    g.drawCircle(point.x, point.y, 20 * this.iEnd.percent());
+  };
+
+  Indicator.prototype.isActive = function() {
+    return !this.iEnd.isReady();
+  };
+
+
+  /**
+   * Represents items currently selected to issue commands to.
+   */
+  Selection = function(items) {
+    this.items = items || [];
+  };
+
+  Selection.prototype.update = function() {
+    this.highlightItems_();
+  };
+
+  Selection.prototype.highlightItems_ = function() {
+    var g = GameState.graphics;
+    g.lineStyle(2, 0x15FF00, .8);
+    for (var i = 0, item; item = this.items[i]; i++) {
+      g.drawCircle(item.x, item.y, item.radius + 4);
+    }
+  };
 
 
   /**
@@ -36,7 +79,11 @@ define(function(require) {
 
     this.spawnRotation = 0;
 
-    this.selection = [];
+    this.selection = null;
+
+    this.root = null;
+
+    this.indicators = [];
   };
 
   Commands.prototype.listenForEvents = function(stage, root) {
@@ -59,66 +106,70 @@ define(function(require) {
     };
 
     stage.mousedown = function(data) {
+      self.selection = null;
       self.mouseStart = data.global.clone();
       self.mouse = data.global;//data.getLocalPosition(root); //data.global;
       self.mouseDown = true;
     };
 
-    stage.rightdown = function(data) {
-      console.log('right down!');
+    stage.rightclick = function(data) {
+      var point = data.getLocalPosition(root);
+      self.issueCommand(point);
     }
 
     stage.mouseup = function(data) {
       self.mouseDown = false;
-
       self.mouse = data.global.clone();
 
       var start = root.toLocal(self.mouseStart);
       var end = root.toLocal(self.mouse);
-
-
 
       var x = Math.min(start.x, end.x);
       var y = Math.min(start.y, end.y);
       var width = Math.abs(end.x - start.x);
       var height = Math.abs(end.y - start.y);
 
-      var ships = self.world.findWithinRect(x, y, width, height);
-
-      var makeRed = function(ship) {
-        ship.tint = Color.RED;
-      }
-
-      ships.forEach(makeRed);
+      var items = self.world.findWithinRect(x, y, width, height);
+      self.selection = new Selection(items);
     };
-
-    stage.click = function(data) {
-      console.log('click');
-    }
   };
 
   Commands.prototype.update = function() {
     this.iSpawn.updateOnly();
+
+    if (this.selection) {
+      this.selection.update();
+    }
 
     if (this.mouseDown) {
       var start = this.mouseStart;
       var end = this.mouse;
 
       var g = GameState.overlay.fixed.graphics;
-      g.lineStyle(2, 0xFFFFFF, 1);
-      //g.moveTo(start.x, start.y);
-      //g.lineTo(end.x, end.y);
-
-
-      g.beginFill(0xFF4F4F, .1);
+      g.lineStyle(2, 0x15FF00, 1);
+      g.beginFill(0x000000, .3);
       g.drawRect(start.x, start.y, end.x - start.x, end.y - start.y);
-
     }
 
+    this.indicators.forEach(util.invoke('update'));
+    this.indicators = this.indicators.filter(util.invoke('isActive'));
 
     /*if (this.mouseDown) {
       this.iSpawn.trigger();
     }*/
+  };
+
+  Commands.prototype.issueCommand = function(point) {
+    var selection = this.selection;
+    if (!selection || !selection.items.length) {
+      return;
+    }
+
+    selection.items.forEach(function(item) {
+      item.target = point;
+    });
+
+    this.indicators.push(new Indicator(point));
   };
 
   Commands.prototype.setSpawnColor = function(color) {
