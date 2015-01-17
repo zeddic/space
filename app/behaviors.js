@@ -1,11 +1,13 @@
 define(function(require) {
 
+  var PIXI = require('lib/pixi');
   var GameState = require('game-state');
   var Interval = require('util/interval');
   var Steering = require('steering');
   var Vector = require('vector');
   var random = require('util/random');
   var util = require('util/util');
+  var Color = require('util/color');
 
   function ErraticBehavior(ship) {
     this.ship = ship;
@@ -236,7 +238,7 @@ define(function(require) {
     };
   };
 
-  function WanderBehavior(ship) {
+  function WanderBehavior(ship) 
     var steer = new Steering({
       maxSpeed: 2,
       entity: ship,

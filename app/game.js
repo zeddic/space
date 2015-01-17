@@ -8,6 +8,7 @@ define(function(require) {
   var GameState = require('game-state');
   var Planet = require('planet');
   var Stats = require('lib/stats.min');
+  var Tail = require('tail');
   var World = require('world');
   var behaviors = require('behaviors');
   var random = require('util/random');
@@ -67,6 +68,7 @@ define(function(require) {
       // Foreground Graphics
       graphics = new PIXI.Graphics();
       root.addChild(graphics);
+      GameState.root = root;
       GameState.graphics = graphics;
 
       // Overlay layer
@@ -87,17 +89,17 @@ define(function(require) {
       var randomizePoint = function(point) {
         //point.x = rand(-width/2, width/2);
         //point.y = rand(-height/2, height/2);
-
         point.x = random.value(-1000, 1000);
         point.y = random.value(-1000, 1000);
       };
 
-      for (var i = 0; i < 200; i++) {
+      for (var i = 0; i < 100; i++) {
         var ship = new Ship();
+        randomizePoint(ship.position);
         ship.behavior = new behaviors.WanderBehavior(ship);
+        ship.tail = new Tail(ship);
         ship.tint = Color.WHITE;
         ship.rotation = random.value(0, Math.PI * 2);
-        randomizePoint(ship.position);
         world.add(ship);
       };
 

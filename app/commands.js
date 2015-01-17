@@ -46,9 +46,9 @@ define(function(require) {
 
   Selection.prototype.highlightItems_ = function() {
     var g = GameState.graphics;
-    g.lineStyle(2, 0x15FF00, .8);
+    g.lineStyle(2, 0x15FF00, .5);
     for (var i = 0, item; item = this.items[i]; i++) {
-      g.drawCircle(item.x, item.y, item.radius + 4);
+      g.drawCircle(item.x, item.y, item.radius + 2);
     }
   };
 
@@ -100,8 +100,8 @@ define(function(require) {
     stage.interactive = true;
 
     stage.mousemove = function(data) {
-      var point = data.getLocalPosition(root);
-      GameState.mouse = point;
+      //var point = data.getLocalPosition(root);
+      GameState.mouse = data.global;
       self.mouse = data.global;
     };
 
@@ -182,6 +182,10 @@ define(function(require) {
 
   Commands.prototype.setSpawnRotation = function(rotation) {
     this.spawnRotation = rotation;
+  };
+
+  Commands.prototype.isInvalidPoint = function(point) {
+
   };
 
   Commands.prototype.spawnShip = function() {

@@ -19,13 +19,25 @@ h2 {
   top: 0;
   bottom: 0;
   right: 0;
-  left: 0;
+  left: 250px;
   border: 2px solid black;
 }
 
 canvas {
   display: block;
 }
+
+.sidebar {
+  background: #2d2d2d;
+  color: #888;
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 250px;
+  opacity: 1;
+}
+
 
 .card {
   background: rgba(0, 0, 0, .8);

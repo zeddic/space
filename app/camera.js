@@ -32,7 +32,10 @@ define(function(require) {
     // Listen for mouse scroll events.
     window.addEventListener('wheel', function(e) {
       var deltaY = e.wheelDeltaY || e.detail;
-      self.onWheelChange(e.clientX, e.clientY, deltaY);
+
+      var point = GameState.mouse;
+      //e.clientX, e.clientY
+      self.onWheelChange(point.x, point.y, deltaY);
       e.preventDefault();
     }, false);
   };

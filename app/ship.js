@@ -115,7 +115,9 @@ define(function(require) {
     //this.userControl();
     //this.updatePosition();
 
+    // todo(baileys): add a simple collection for updateable things.
     this.behavior && this.behavior.update();
+    this.tail && this.tail.update();
 
     var healthY = this.y + 15;
     var healthX = this.x - 10;
