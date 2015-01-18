@@ -13,6 +13,8 @@ define(function(require) {
 
     var options = options || {};
 
+    this.options = options;
+
     /** @type {GameObject} */
     this.ship = ship;
 
@@ -27,7 +29,9 @@ define(function(require) {
      * @type {Array.<Vector>}
      */
     this.points = Array(options.length || DEFAULT_LENGTH);
-    this.points.map(function() { return new Vector(0, 0); } );
+    for (var i = 0; i < this.points.length; i++) {
+      this.points[i] = new Vector(0, 0);
+    }
 
     /** @type {PIXI.Rope} */
     this.rope = new PIXI.Rope(texture, this.points);
@@ -58,7 +62,7 @@ define(function(require) {
   }
 
   Tail.prototype.origin = function() {
-    return this.ship.radiusPointByRad(Math.PI, 0);
+    return this.ship.radiusPointByRad(Math.PI, -5);
   }
 
 

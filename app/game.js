@@ -12,6 +12,7 @@ define(function(require) {
   var World = require('world');
   var behaviors = require('behaviors');
   var random = require('util/random');
+  var PlayerControl = require('player-control');
 
   PIXI.Point = Vector;
 
@@ -93,24 +94,31 @@ define(function(require) {
         point.y = random.value(-1000, 1000);
       };
 
-      for (var i = 0; i < 100; i++) {
+      for (var i = 0; i < 0; i++) {
         var ship = new Ship();
         randomizePoint(ship.position);
         ship.behavior = new behaviors.WanderBehavior(ship);
-        ship.tail = new Tail(ship);
-        ship.tint = Color.WHITE;
+        //ship.tail = new Tail(ship);
+        ship.tint = Color.random();
         ship.rotation = random.value(0, Math.PI * 2);
         world.add(ship);
       };
 
-      var big = new Ship();
-      big.behavior = new behaviors.EatBehavior(big);
-      big.tint = Color.RED;
-      big.width = 60;
-      big.height = 70;
-      big.radius = 24;
-      big.hunter = true;
-      world.add(big);
+      var player = new Ship();
+      player.tail = new Tail(player);
+      player.control = new PlayerControl(player);
+      player.position.x = 100;
+      GameState.player = player;
+      world.add(player);
+
+      // var big = new Ship();
+      // big.behavior = new behaviors.EatBehavior(big);
+      // big.tint = Color.RED;
+      // big.width = 60;
+      // big.height = 70;
+      // big.radius = 24;
+      // big.hunter = true;
+      // world.add(big);
 
       var planet = new Planet(0, 0);
       world.add(planet);
@@ -147,8 +155,13 @@ define(function(require) {
 
       // Update entities.
       camera.update();
+
+      camera.centerOn(GameState.player);
+
       world.update();
       commands.update();
+
+
 
       renderer.render(stage);
 

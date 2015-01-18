@@ -238,7 +238,7 @@ define(function(require) {
     };
   };
 
-  function WanderBehavior(ship) 
+  function WanderBehavior(ship) {
     var steer = new Steering({
       maxSpeed: 2,
       entity: ship,

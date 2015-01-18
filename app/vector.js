@@ -173,6 +173,10 @@ define(function() {
     return this;
   };
 
+  Vector.prototype.toString = function() {
+    return '<' + this.x + ', ' + this.y + '>';
+  };
+
   Vector.fromRad = function(rad, opt_length) {
     return new Vector().fromRad(rad, opt_length);
   };

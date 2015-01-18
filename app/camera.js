@@ -47,31 +47,60 @@ define(function(require) {
 
   Camera.prototype.update = function() {
     // Keyboard Zoom In/Out
-    if (Key.isDown(Key.Q)) {
-      this.zoomCenter(true, this.KEYBOARD_ZOOM_SPEED);
-    }
+    // if (Key.isDown(Key.Q)) {
+    //   this.zoomCenter(true, this.KEYBOARD_ZOOM_SPEED);
+    // }
 
-    if (Key.isDown(Key.Z)) {
-      this.zoomCenter(false, this.KEYBOARD_ZOOM_SPEED);
-    }
+    // if (Key.isDown(Key.Z)) {
+    //   this.zoomCenter(false, this.KEYBOARD_ZOOM_SPEED);
+    // }
 
     // Keyboard Panning
     var moveSpeed = this.KEYBOARD_MOVE_SPEED;
-    if (Key.isDown(Key.UP) || Key.isDown(Key.W)) {
+    if (Key.isDown(Key.UP)) {
       this.root.position.y += moveSpeed;
     }
 
-    if (Key.isDown(Key.DOWN) || Key.isDown(Key.S)) {
+    if (Key.isDown(Key.DOWN)) {
       this.root.position.y -= moveSpeed;
     }
 
-    if (Key.isDown(Key.LEFT) || Key.isDown(Key.A)) {
+    if (Key.isDown(Key.LEFT)) {
       this.root.position.x += moveSpeed;
     }
 
-    if (Key.isDown(Key.RIGHT) || Key.isDown(Key.D)) {
+    if (Key.isDown(Key.RIGHT)) {
       this.root.position.x -= moveSpeed;
     }
+  };
+
+  Camera.prototype.centerOn = function(entity) {
+    var width = GameState.screen.width;
+    var height = GameState.screen.height;
+
+    var x = entity.x;
+    var y = entity.y;
+
+
+
+    var origin = this.toLocal(0, 0);
+    var dim = this.toLocal(width, height);
+
+    dim.sub(origin);
+
+    console.log(dim);
+
+    var root = this.root;
+    root.position.x = -(x - dim.x / 2);
+
+    root.position.y = -(y - dim.y / 2);
+
+    // console.log('---');
+    // console.log(entity.position);
+    // console.log(test);
+
+    //this.zoom(x, y, false, 0);
+    //this.zoom(width/2, height/2, isZoomIn, amount);
   };
 
   /**
@@ -85,7 +114,6 @@ define(function(require) {
     var height = GameState.screen.height;
     this.zoom(width/2, height/2, isZoomIn, amount);
   };
-
 
   /**
    * Zoom in/out on the given point in screen space. Example: 0, 0 would zoom in

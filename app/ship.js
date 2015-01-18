@@ -118,6 +118,7 @@ define(function(require) {
     // todo(baileys): add a simple collection for updateable things.
     this.behavior && this.behavior.update();
     this.tail && this.tail.update();
+    this.control && this.control.update();
 
     var healthY = this.y + 15;
     var healthX = this.x - 10;
