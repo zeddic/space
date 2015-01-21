@@ -74,33 +74,20 @@ define(function(require) {
     }
   };
 
+  /**
+   * Ceneters the camera on the given entity.
+   */
   Camera.prototype.centerOn = function(entity) {
     var width = GameState.screen.width;
     var height = GameState.screen.height;
 
-    var x = entity.x;
-    var y = entity.y;
-
-
-
     var origin = this.toLocal(0, 0);
-    var dim = this.toLocal(width, height);
-
-    dim.sub(origin);
-
-    console.log(dim);
+    var dimension = this.toLocal(width, height);
+    dimension.sub(origin);
 
     var root = this.root;
-    root.position.x = -(x - dim.x / 2);
-
-    root.position.y = -(y - dim.y / 2);
-
-    // console.log('---');
-    // console.log(entity.position);
-    // console.log(test);
-
-    //this.zoom(x, y, false, 0);
-    //this.zoom(width/2, height/2, isZoomIn, amount);
+    root.position.x = -(entity.x - dimension.x / 2) * root.scale.x;
+    root.position.y = -(entity.y - dimension.y / 2) * root.scale.y;
   };
 
   /**

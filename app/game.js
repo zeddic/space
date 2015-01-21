@@ -94,11 +94,11 @@ define(function(require) {
         point.y = random.value(-1000, 1000);
       };
 
-      for (var i = 0; i < 0; i++) {
+      for (var i = 0; i < 20; i++) {
         var ship = new Ship();
         randomizePoint(ship.position);
         ship.behavior = new behaviors.WanderBehavior(ship);
-        //ship.tail = new Tail(ship);
+        ship.tail = new Tail(ship);
         ship.tint = Color.random();
         ship.rotation = random.value(0, Math.PI * 2);
         world.add(ship);

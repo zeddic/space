@@ -10,44 +10,87 @@
   <body>
     <div class="game-content"></div>
     <section class="sidebar" ng-controller="CardController">
-      <header>Space!!</header>
-      Click to spawn ships with the following options.
+      <header>Space!</header>
+      <p>WASD to steer. Space to fire. Hold shift to disable dampening</p>
 
       <section class="card-section">
-        <h2>AI</h2>
-        <label class="radio-label"><input type="radio" name="behavior" value="ai" ng-model="behavior">State Machine</label>
-        <label class="radio-label"><input type="radio" name="behavior" value="noop" ng-model="behavior">Do-Nothing</label>
-        <label class="radio-label"><input type="radio" name="behavior" value="spin" ng-model="behavior">Spin</label>
-        <label class="radio-label"><input type="radio" name="behavior" value="erratic" ng-model="behavior">Erratic</label>
-        <label class="radio-label"><input type="radio" name="behavior" value="mouse" ng-model="behavior">Follow Mouse</label>
-        <label class="radio-label"><input type="radio" name="behavior" value="flock" ng-model="behavior">Flock</label>
+        <h2>Control Parameters</h2>
+
+
+        <label class="control-input">
+          Acceleration ({{ state.player.control.accel }})
+          <br>
+          <input
+              ng-model="state.player.control.accel"
+              type="range"
+              min="0"
+              max=".5"
+              step=".01"
+              />
+        </label>
+
+        <label class="control-input">
+          Max Speed ({{ state.player.control.maxSpeed }})
+          <br>
+          <input
+              ng-model="state.player.control.maxSpeed"
+              type="range"
+              min="0"
+              max="20"
+              step=".5"
+              />
+        </label>
+
+        <label class="control-input">
+          Dampening ({{ state.player.control.dapenAccel }})
+          <br>
+          <input
+              ng-model="state.player.control.dapenAccel"
+              type="range"
+              min="0"
+              max="1"
+              step=".01"
+              />
+            
+        </label>
+
+        <label class="control-input">
+          Angular Acceleration ({{ state.player.control.angAccel }})
+          <br>
+          <input
+              ng-model="state.player.control.angAccel"
+              type="range"
+              min="0"
+              max=".01"
+              step=".0001"
+              />
+        </label>
+
+        <label class="control-input">
+          Max Angular Acceleration ({{ state.player.control.maxAngSpeed }})
+          <br>
+          <input
+              ng-model="state.player.control.maxAngSpeed"
+              type="range"
+              min="0"
+              max=".5"
+              step=".01"
+              />
+        </label>
+
+        <label class="control-input">
+          Angular Dampening ({{ state.player.control.dapenAngAccel }})
+          <br>
+          <input
+              ng-model="state.player.control.dapenAngAccel"
+              type="range"
+              min="0"
+              max=".01"
+              step=".0001"
+              />
+        </label>
       </section>
 
-      <section class="card-section">
-        <h2>Color</h2>
-        <ul class="color-list">
-          <li ng-repeat="color in colors">
-            <button type="button"
-                style="background:{{color.hex}}" 
-                ng-click="selectColor(color)"
-                class="color-input"
-                ng-class="{active: activeColor == color.raw}"></button>
-          </li>
-        </ul>
-      </section>
-
-      <section class="card-section">
-        <h2>Rotation</h2>
-        <input type="range" name="rotation" ng-model="rotation"
-            min="-3.149" max="3.149" step=".01">
-        {{ rotation }}
-      </section>
-
-      <section class="card-section">
-        <h2>Other Actions</h2>
-        <button type="button" class="btn" ng-click="randomize()">New World</button>
-        <button type="button" class="btn" ng-click="dismiss()">Dismiss</button>
-      </section>
     </section>
   </body>
 </html>

@@ -5,6 +5,7 @@ define(function(require) {
   var createGame = require('game');
   var behaviors = require('behaviors');
   var util = require('util/util');
+  var GameState = require('game-state');
 
 
   var space = {};
@@ -19,6 +20,7 @@ define(function(require) {
     var game = createGame();
     game.start();
 
+    $scope.state = GameState;
     $scope.behavior = 'mouse';
     $scope.rotation = 0;
     $scope.activeColor = Color.WHITE;

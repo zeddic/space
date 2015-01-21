@@ -6,4 +6,4 @@ rsync -az --stats --progress \
     --exclude "*node*" \
     --exclude "test\*" \
     ../space/ \
-    zeddic@zeddic.com:/home/zeddic/public_html/space
+    zeddic@www.zeddic.com:/home/zeddic/public_html/space
