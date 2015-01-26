@@ -2,6 +2,7 @@ define(function(require) {
 
   var GameState = require('game-state');
   var Key = require('key');
+  var Transition = require('util/transition');
   var Vector = require('vector');
 
   /**
@@ -22,6 +23,8 @@ define(function(require) {
 
     /** Scales the mouse wheel deltaY by this value when scaling zoom. */
     this.WHEEL_ZOOM_SCALAR = .0001;
+
+    this.target = null;
 
     this.setupEventListeners();
   };
@@ -72,6 +75,10 @@ define(function(require) {
     if (Key.isDown(Key.RIGHT)) {
       this.root.position.x -= moveSpeed;
     }
+
+    if (this.target) {
+      this.centerOn(this.target);
+    }
   };
 
   /**
@@ -89,6 +96,15 @@ define(function(require) {
     root.position.x = -(entity.x - dimension.x / 2) * root.scale.x;
     root.position.y = -(entity.y - dimension.y / 2) * root.scale.y;
   };
+
+
+  /**
+   *  
+   */
+  Camera.prototype.setTarget = function(target) {
+    this.target = target;
+  };
+
 
   /**
    * Zoom in/out on the center of the screen.
@@ -114,16 +130,37 @@ define(function(require) {
     var root = this.root;
     var direction = isZoomIn ? 1 : -1;
     var factor = (1 + direction * amount);
+    var level = root.scale.x * factor;
+    this.setZoomLevel(level, x, y);
+  };
 
+
+  /**
+   * Sets the zoom level of the camera. 1 is no zoom. Values less than one zoom out, 
+   * Values greater than one zoom in.
+   */
+  Camera.prototype.setZoomLevel = function(level, opt_x, opt_y) {
+    var x = opt_x || GameState.screen.width / 2;
+    var y = opt_y || GameState.screen.height / 2;
+
+    var root = this.root;
     var beforeTransform = this.toLocal(x, y);
-    root.scale.x *= factor;
-    root.scale.y *= factor;
+    root.scale.x = level;
+    root.scale.y = level;
     var afterTransform = this.toLocal(x, y);
 
     root.position.x += (afterTransform.x - beforeTransform.x) * root.scale.x;
     root.position.y += (afterTransform.y - beforeTransform.y) * root.scale.y;
     root.updateTransform();
   };
+
+  /**
+   * Gets the current zoom level of the camera.
+   */
+  Camera.prototype.getZoomLevel = function() {
+    return this.root.scale.x;
+  };
+
 
   /**
    * Converts x/y values in screen space to world space.

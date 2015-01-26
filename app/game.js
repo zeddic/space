@@ -106,10 +106,12 @@ define(function(require) {
 
       var player = new Ship();
       player.tail = new Tail(player);
-      player.control = new PlayerControl(player);
+      player.control = new PlayerControl(player, camera);
       player.position.x = 100;
       GameState.player = player;
       world.add(player);
+
+      camera.setTarget(player);
 
       // var big = new Ship();
       // big.behavior = new behaviors.EatBehavior(big);
@@ -156,7 +158,6 @@ define(function(require) {
       // Update entities.
       camera.update();
 
-      camera.centerOn(GameState.player);
 
       world.update();
       commands.update();

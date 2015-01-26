@@ -3,10 +3,11 @@ define(function(require) {
   var PIXI = require('lib/pixi');
   var GameState = require('game-state');
   var Interval = require('util/interval');
-  var Vector = require('vector');
   var Key = require('key');
+  var Transition = require('util/transition');
+  var Vector = require('vector');
 
-  function PlayerControl(ship) {
+  function PlayerControl(ship, camera) {
 
     var DEFAULT_ACCEL = 0.1;
     var DEFAULT_MAX_ACCEL = 0.5;
@@ -83,8 +84,21 @@ define(function(require) {
      */
     var iFire = new Interval(15);
 
+    var zoomingIn = false;
+    var zoomingOut = false;
+    var abortZooming =false;
+
+
+    var zoomTransition = new Transition()
+        .between(1.2, .5)
+        .duration(250)
+        .type(Transition.Type.EASE_IN_OUT);
+
+    camera.setZoomLevel(1.2);
 
     this.update = function() {
+      //transition.update();
+      //camera.setZoomLevel(transition.value());
 
       force.set(0, 0);
 
@@ -109,8 +123,25 @@ define(function(require) {
       }
 
       // Dappen Movement
-      if (!Key.isDown(Key.SHIFT) && force.isNull()) {
-        force.add(ship.velocity.clone().invert().truncate(this.dapenAccel));
+      if (/* !Key.isDown(Key.SHIFT) && */force.isNull()) {
+       force.add(ship.velocity.clone().invert().truncate(this.dapenAccel));
+      }
+
+      if (Key.isDown(Key.SHIFT)) {
+        if (!zoomingIn) {
+          zoomTransition.between(camera.getZoomLevel(), .5).reset();
+          zoomingIn = true;
+          zoomingOut = false;
+        }
+      } else if (zoomingIn) {
+        zoomTransition.between(camera.getZoomLevel(), 1.2).reset();
+        zoomingIn = false;
+        zoomingOut = true;
+      }
+
+      if (zoomingIn || zoomingOut) {
+        zoomTransition.update();
+        camera.setZoomLevel(zoomTransition.value());
       }
 
       // Turn Left, Right, and Auto Stop Turning
